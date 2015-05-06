@@ -1,0 +1,9 @@
+<use name="root"/>
+<use name="rootrflx"/>
+<use name="oracleocci"/>
+<use name="boost_filesystem"/>
+
+<export>
+  <use name="root"/>
+  <lib name="StoppedHSCPLumi"/>
+</export>

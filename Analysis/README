@@ -1,0 +1,92 @@
+
+*** Basic documentation of Stopped HSCP Analysis code ***
+
+1. C++ code
+StoppedHSCPEvent class
+	interface/StoppedHSCPEvent.h
+	src/StoppedHSCPEvent.cc
+	src/LinkDef.h
+	Defines the TTree and provides helper methods to fill it. TTree can be read in bare ROOT with no additional code required.
+
+StoppedHSCPTreeProducer class
+	plugins/StoppedHSCPTreeProducer.cc
+	python/stoppedHSCPTree_cfi.py
+	An ESAnalyzer that writes TTrees using TFileService. Config file includes switches to turn on/off MC, Reco and digi level information
+
+[Code below is all old modules of Ben's that may be useful]
+BitFilter
+	plugins/BitFilter.cc
+	Select events based on L1 bits.  Used by some jobs, but will be replaced with official L1Skimmer asap
+
+CaloFilter
+	plugins/CaloFilter.cc
+	Select events based on caloJet and caloTower cuts.  To be incorporated in post-ntuple analysis asap.
+
+MuonFilter
+	plugins/MuonFilter.cc
+	Select events based on muon 4-vector.  Redundant with official selectors.  To be removed.
+
+MuonJets
+	plugins/MuonJets.cc
+	Extraplotes muons to HCAL and make histograms.
+
+TimingExtract
+	plugins/TimingExtract.cc
+	Print run and event number to file.
+
+TimingExtractFltr
+	plugins/TimingExtractFltr.cc
+	Filter events based on file written by TimingExtract.
+	
+
+2. CMSSW jobs
+test/testStoppedHSCPTree.py
+	Test job for producing TTrees.  Also used for production.
+
+test/stoppedHSCPTree_CRAFT08.py
+	Runs cosmic reco on CRAFT08 RAW data, and produces ntuples
+
+
+3.  ROOT macros
+macros/BasicHistos.C   	  make histograms and plot all the basic distributions
+macros/EffHistos.C   	  make histograms and plot N-1 efficiencies
+macros/Cuts.C		  offline cuts
+macros/WriteSelection.C	  select events and write a new TTree
+macros/DoAnalysis.C       perform all steps in the analysis
+
+
+4.  Utilities
+test/merge.py - merge ROOT files from CASTOR locations
+
+
+
+*** Basic instructions for doing Stopped HSCP Analysis ***
+
+1.  Making ntuples
+
+cmsRun test/testStoppedHSCPTree.py
+
+2.  Making ntuples
+	Create jobs for the CAF or at RAL :
+crab -create -cfg test/crab_CAF.cfg
+crab -create -cfg test/crab_RAL.cfg
+	Local working directory will be CRAFT09_vX
+crab -submit -c CRAFT09_vX
+
+	Create the CRAFT08 jobs :
+crab -create -cfg test/crab_CRAFT08.cfg
+	Local working directory will be CRAFT08_vX
+crab -submit -c CRAFT08_vX
+
+
+3. Merging ntuples
+       This command will merge *all* files in <castor directory> and put them in <output file>.  You might need to copy and edit the hadd command if this produces an output file > 2 Gb.  (ie. this is work in progress!)
+
+python test/merge.py <castor path> <output file>
+
+
+
+4.  Making plots from ntuples
+	The steps in the analysis should be clear from the macro.
+root -q -b macros/DoAnalysis.C
+

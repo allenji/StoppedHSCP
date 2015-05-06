@@ -1,0 +1,7 @@
+
+
+StoppedHSCP/Analysis/macros
+
+This directory contains python macros for producing plots from histograms (which are themselves produced by executables in /bin).
+
+

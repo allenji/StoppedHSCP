@@ -1,0 +1,16 @@
+
+<use name="root"/>
+<use name="rootgraphics"/>
+<use name="boost"/>
+<use name="boost_program_options"/>
+<use name="CalibFormats/HcalObjects"/>
+<use name="CalibCalorimetry/HcalAlgos"/>
+<use name="StoppedHSCP/Ntuples"/>
+
+<flags CXXFLAGS="-g"/>
+
+<export>
+  <use name="root"/>
+  <use name="boost"/>
+  <lib name="StoppedHSCPAnalysis"/>
+</export>

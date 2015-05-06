@@ -1,0 +1,34 @@
+<use name="root"/>
+<use name="roofit"/>
+<use name="roostats"/>
+<use name="boost_program_options"/>
+<use name="boost"/>
+<use name="StoppedHSCP/Analysis"/>
+
+<bin name="makeHistograms" file="MakeHistograms.cpp"/>
+
+<bin name="example" file="Example.cpp"/>
+
+<bin name="mcAnalysis" file="MCAnalysis.cpp"/>
+
+<bin name="bxDistributions" file="BXDistributions.cpp"/>
+
+<bin name="haloBackground" file="HaloBackground.cpp"/>
+
+<bin name="backgroundStability" file="BackgroundStability.cpp"/>
+
+<bin name="backgrounds" file="Backgrounds.cpp"/>
+
+<bin name="beamGas" file="BeamGas.cpp"/>
+
+<bin name="cosmics" file="Cosmics.cpp"/>
+
+<bin name="cosmicInefficiency" file="CosmicInefficiency.cpp"/>
+
+<bin name="cosmicBackground" file="CosmicBackground.cpp"/>
+
+<bin name="search" file="Search.cpp"/>
+
+<bin name="noise" file="Noise.cpp"/>
+
+<bin name="noiseSystematics" file="NoiseSystematics.cpp"/>

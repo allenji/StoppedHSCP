@@ -1,0 +1,12 @@
+<use   name="GeneratorInterface/Pythia6Interface"/>
+<use   name="SimG4Core/Application"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="FWCore/ServiceRegistry"/>
+<use   name="SimDataFormats/GeneratorProducts"/>
+<use   name="geant4"/>
+<use   name="boost"/>
+<use   name="root"/>
+<library   file="*.cc" name="StoppedHSCPSimulationModules">
+  <use   name="heppdt"/>
+  <flags   EDM_PLUGIN="1"/>
+</library>
