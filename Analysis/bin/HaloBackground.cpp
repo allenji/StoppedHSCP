@@ -434,8 +434,8 @@ void HaloBackground::loop() {
     bool searchSample = cuts_.triggerCut() && event_->jet_N > 0;
     if (!searchSample) continue;
 
-    bool incoming = false;
-    bool outgoing = false;
+    //    bool incoming = false;
+    //    bool outgoing = false;
     int nIncoming = 0;
     int nOutgoing = 0;
     
@@ -485,10 +485,10 @@ void HaloBackground::loop() {
 	nLayers.insert(layer);
 	
 	if (event_->cscSegTime[iSeg] < -10) {
-	  incoming = true;
+	  //	  incoming = true;
 	  nIncoming++;
 	} else {
-	  outgoing = true;
+	  //	  outgoing = true;
 	  nOutgoing++;
 	}
       }

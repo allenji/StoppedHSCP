@@ -225,7 +225,7 @@ bool Cuts::cosmicVeto2() const {      // Cosmic cut for 2012 analysis
   double outerDT = 0.00000001; // avoid divide by zero
   int innerDT = 0;
 
-  double testPhi;
+  double testPhi = -1.;
   double maxDeltaPhi = -1.;
   double maxDeltaJetPhi = -1.;
   for (unsigned idt = 0; idt<event_->DTSegment_N; idt++){
@@ -249,7 +249,7 @@ bool Cuts::cosmicVeto2() const {      // Cosmic cut for 2012 analysis
     else innerDT++;
 
   }
-  double frac = innerDT/outerDT;
+  //  double frac = innerDT/outerDT;
 
   double outerRPC = 0.00000001;
   double innerRPC = 0;
@@ -280,7 +280,7 @@ bool Cuts::cosmicVeto2() const {      // Cosmic cut for 2012 analysis
     //if (event_->rpcHitR[irpc] < 560) continue;
     for (unsigned jrpc = irpc+1; jrpc < event_->rpcHit_N; jrpc++) {
       //if (event_->rpcHitR[jrpc] < 560) continue;
-      double deltaZ = fabs(event_->rpcHitZ[irpc] - event_->rpcHitZ[jrpc]);
+      //      double deltaZ = fabs(event_->rpcHitZ[irpc] - event_->rpcHitZ[jrpc]);
       double deltaPhi = acos(cos(event_->rpcHitPhi[irpc] - event_->rpcHitPhi[jrpc]));
       
       // Require hits to be localized in phi

@@ -546,10 +546,7 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   if (doRecHits_) log += " rechits";
 
   edm::LogInfo("StoppedHSCPTree") << "Going to fill " << log << std::endl;
-
-  HcalLogicalMapGenerator gen;
-  logicalMap_=new HcalLogicalMap(gen.createMap());
-
+  
   const float epsilon = 0.001;
   Surface::RotationType rot; // unit rotation matrix
 
@@ -601,6 +598,14 @@ StoppedHSCPTreeProducer::beginJob()
 void 
 StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& iSetup)
 {
+
+  // For example of how to get HcalLogicalMap, see http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/test/MapTester.cc  
+  edm::ESHandle<HcalTopology> topo;
+  iSetup.get<IdealGeometryRecord>().get(topo);
+  HcalLogicalMapGenerator gen;
+  logicalMap_ = new HcalLogicalMap(gen.createMap(&(*topo)));  
+
+
   // Get PDT Table if MC
   if (isMC_)
     iSetup.getData(fPDGTable);
@@ -941,8 +946,8 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	
 	// TODO: find a way to get the pdgid, mass, and charge of the stopped particle 
 	// (the name is not in the ParticleDataTable)
-	Double_t mass = -1.0;
-	Double_t charge = 99.0;
+	//	Double_t mass = -1.0;
+	//	Double_t charge = 99.0;
 	Int_t pdgid = 0;
 	const HepPDT::ParticleData* PData = fPDGTable->particle(names->at(i));
 	if (PData == 0) {
@@ -950,8 +955,8 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 					       << " table for " << names->at(i)
 					       << std::endl;
 	} else {
-	  mass = PData->mass();
-	  charge = PData->charge();
+	  //	  mass = PData->mass();
+	  //	  charge = PData->charge();
 	  pdgid = PData->ID().pid();
 	}
 	event_->mcStoppedParticleName.push_back(names->at(i));
@@ -2564,7 +2569,9 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
   // get the conditions and channel quality
   edm::ESHandle<HcalDbService> conditions;
   iSetup.get<HcalDbRecord>().get(conditions);
-  const HcalQIEShape* shape = conditions->getHcalShape();
+  const HcalDbService* theDbService=conditions.product(); 
+  //  const HcalQIEShape* shape = conditions->getHcalShape();
+
 
   // get the digis themselves
   edm::Handle<HBHEDigiCollection> hcalDigis;
@@ -2578,6 +2585,11 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
       const HBHEDataFrame &digi=(*it);
       HcalDetId cell = digi.id();
 
+      // For example of how to get Hcal shape, see 
+      // http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/src/HcalPedestalAnalysis.cc?v=CMSSW_7_1_8#0145
+      const HcalQIECoder* m_coder = theDbService->getHcalCoder(digi.id());
+      const HcalQIEShape*   shape = theDbService->getHcalShape(m_coder);
+
       // still need to check on valid digis; don't want to include bad channels in digi check
       if (std::find(badChannels_.begin(),
 		    badChannels_.end(),
@@ -2587,7 +2599,7 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
 	  //std::cout <<"\t("<<cell.ieta()<<","<<cell.iphi()<<","<<cell.depth()<<")"<<  std::endl;
 	  continue;
 	}
-      DetId detcell=(DetId)cell;
+      //      DetId detcell=(DetId)cell;
 
       // get the calibrations and coder
       const HcalCalibrations& calibrations=conditions->getHcalCalibrations(cell);

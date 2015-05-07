@@ -22,11 +22,11 @@ Simulator::Simulator() :
   lumi_(),
   events_(),
   //  lifetimeMasks_(NBXS_PER_ORBIT, false),
-  tree_("events", "Event time structure"),
   effLumi_(0.),
   nObs_(0),
   nExp_(0.),
-  nExp_e_(0.)
+  nExp_e_(0.),
+  tree_("events", "Event time structure") 
 {
   tree_.Branch("ls", &ls_, "ls/I");
   tree_.Branch("orbit", &orbit_, "orbit/I");

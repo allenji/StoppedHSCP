@@ -93,18 +93,18 @@ void Noise::loop() {
 	hJetEstopped_->Fill(event_->jetE[0]);
     }
 
-    bool goodBX     = fabs(event_->bxWrtBunch) > 2;
-    bool isNoise    = !event_->noiseFilterResult;
+    //    bool goodBX     = fabs(event_->bxWrtBunch) > 2;
+    //    bool isNoise    = !event_->noiseFilterResult;
     bool isTightNoise = !(event_->noiseFilterResult && cuts_.jetN60Cut() && cuts_.jetN90Cut()
 			  && cuts_.towersIPhiCut() && cuts_.iPhiFractionCut());
-    bool isCosmic   = event_->mu_N > 0;
-    bool isCosmic2  = event_->DTSegment_N > 0;
+    //    bool isCosmic   = event_->mu_N > 0;
+    //    bool isCosmic2  = event_->DTSegment_N > 0;
     bool isCosmic3  = !cuts_.cosmicVeto3();
     bool isBeamHalo = event_->cscSeg_N > 0;
-    bool isBeamHalo2 = event_->beamHalo_CSCLoose;
+    //    bool isBeamHalo2 = event_->beamHalo_CSCLoose;
     bool isBeamGas  = event_->track_N > 1;
     bool isVtx      = event_->nVtx > 0;
-    bool isUnid     = (!isNoise && !isCosmic && !isBeamHalo && !isBeamGas && !isVtx);
+    //    bool isUnid     = (!isNoise && !isCosmic && !isBeamHalo && !isBeamGas && !isVtx);
     
     // TODO - this is broken! Test it!
     //if (isNoise) {

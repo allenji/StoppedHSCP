@@ -249,7 +249,7 @@ void Luminosity::buildFromDB(std::vector<unsigned long> runs,
     lb.id   = (unsigned long) result->getInt(2);
     lb.ls   = (unsigned long) result->getInt(3);
     lb.lumi = result->getDouble(4);
-    int ver = result->getInt(5);
+    //    int ver = result->getInt(5);
     lb.good = goodData(lb.run, lb.ls);	
 
     lb.orbit = result->getInt(6);

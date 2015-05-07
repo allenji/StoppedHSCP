@@ -254,16 +254,16 @@ void Search::loop() {
     if (nObsByFill_.size() < fill+1) nObsByFill_.resize(fill+1, 0);
 
     // event quantities
-    int bxWrtBunch  = event_->bxWrtBunch;
+    //    int bxWrtBunch  = event_->bxWrtBunch;
     double e(0.), eta(0.), phi(0.);
     unsigned n60(0), n90(0);
-    if (event_->jet_N>0) {
-      double e        = event_->jetE[0];
-      double eta      = event_->jetEta[0];
-      double phi      = event_->jetPhi[0];
-      unsigned n60    = event_->jetN60[0];
-      unsigned n90    = event_->jetN90[0];
-    }
+    //    if (event_->jet_N>0) {
+      //      double e        = event_->jetE[0];
+      //      double eta      = event_->jetEta[0];
+      //      double phi      = event_->jetPhi[0];
+      //      unsigned n60    = event_->jetN60[0];
+      //      unsigned n90    = event_->jetN90[0];
+    //    }
     unsigned ntow   = event_->nTowerSameiPhi;
     double fiphi    = event_->leadingIPhiFractionValue;
     double r1       = event_->topHPD5R1;
@@ -403,7 +403,7 @@ void Search::loop() {
   else std::cout << "|Cut\t|N\t|Rate (Hz) |N-1 % |N-1 (Hz)|-" << std::endl;
   for (unsigned i=0; i<cuts_.nCuts(); ++i) {
     unsigned ncum = hncutcum_->GetBinContent(i+1);
-    unsigned nind = hncutind_->GetBinContent(i+1);
+    //    unsigned nind = hncutind_->GetBinContent(i+1);
     unsigned nnmo = hnminus1cut_->GetBinContent(i+1);
     std::string label = hncutcum_->GetXaxis()->GetBinLabel(i+1);
     if (isMC_) {
