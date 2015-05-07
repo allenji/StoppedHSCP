@@ -1,0 +1,13 @@
+*** Add most recent version to the top ***
+
+Tag naming convention:  vX.Y, where XX is incremented for substantial revisions.
+
+
+
+v0.0
+=============
+20150506 allenji 
+Identical clone of https://github.com/rodenm/StoppedHSCP.  
+Version of Marissa's code used for EXO-12-036 Run 1 analysis.  
+
+
