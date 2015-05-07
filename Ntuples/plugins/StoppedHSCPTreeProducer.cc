@@ -112,10 +112,10 @@
 #include "Geometry/CaloGeometry/interface/CaloGeometry.h" 
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h" 
 #include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
-#include "CalibCalorimetry/HcalAlgos/interface/HcalLogicalMapGenerator.h"
-#include "CondFormats/HcalObjects/interface/HcalLogicalMap.h"
+// #include "CalibCalorimetry/HcalAlgos/interface/HcalLogicalMapGenerator.h"
+// #include "CondFormats/HcalObjects/interface/HcalLogicalMap.h"
 
-// CSC segments
+// // CSC segments
 #include "DataFormats/CSCRecHit/interface/CSCSegment.h"
 #include "DataFormats/CSCRecHit/interface/CSCSegmentCollection.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
@@ -386,7 +386,7 @@ private:
   double studyTowerMaxEta_;
 
   // Hcal Logical map (ieta-iphi->hardware) object
-  HcalLogicalMap* logicalMap_;  
+  //  HcalLogicalMap logicalMap_;  
   
   // bad channel status to mask;
   HcalChannelQuality* chanquality_;
@@ -547,9 +547,13 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
 
   edm::LogInfo("StoppedHSCPTree") << "Going to fill " << log << std::endl;
 
-  HcalLogicalMapGenerator gen;
-  logicalMap_=new HcalLogicalMap(gen.createMap());
-
+  // edm::ESHandle<HcalTopology> topo;
+  // iSetup.get<IdealGeometryRecord>().get(topo);
+  // HcalLogicalMapGenerator gen;
+  // //  logicalMap_=new HcalLogicalMap(gen.createMap()); // old 
+  // //  int mapIOV = 5 // 5 = Remapping HO ring 0 for SiPMs; see http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/test/maptester_cfg.py
+  // logicalMap_ = gen.createMap(&(*topo)); 
+  
   const float epsilon = 0.001;
   Surface::RotationType rot; // unit rotation matrix
 
@@ -941,8 +945,8 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	
 	// TODO: find a way to get the pdgid, mass, and charge of the stopped particle 
 	// (the name is not in the ParticleDataTable)
-	Double_t mass = -1.0;
-	Double_t charge = 99.0;
+	//	Double_t mass = -1.0;
+	//	Double_t charge = 99.0;
 	Int_t pdgid = 0;
 	const HepPDT::ParticleData* PData = fPDGTable->particle(names->at(i));
 	if (PData == 0) {
@@ -950,8 +954,8 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 					       << " table for " << names->at(i)
 					       << std::endl;
 	} else {
-	  mass = PData->mass();
-	  charge = PData->charge();
+	  //	  mass = PData->mass();
+	  //	  charge = PData->charge();
 	  pdgid = PData->ID().pid();
 	}
 	event_->mcStoppedParticleName.push_back(names->at(i));
@@ -2355,8 +2359,8 @@ StoppedHSCPTreeProducer::doHcalRecHits(const edm::Event& iEvent)
 	rh.ieta  = (*hit).id().ieta();
 	rh.iphi  = (*hit).id().iphi();
 	rh.depth = (*hit).id().depth();
-	rh.RBXindex = logicalMap_->getHcalFrontEndId(hit->detid()).rbxIndex();
-	rh.RMindex  = logicalMap_->getHcalFrontEndId(hit->detid()).rm();
+	// rh.RBXindex = logicalMap_.getHcalFrontEndId(hit->detid()).rbxIndex();
+	// rh.RMindex  = logicalMap_.getHcalFrontEndId(hit->detid()).rm();
 	event_->addRecHit(rh);
 
 	count++;
@@ -2564,7 +2568,9 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
   // get the conditions and channel quality
   edm::ESHandle<HcalDbService> conditions;
   iSetup.get<HcalDbRecord>().get(conditions);
-  const HcalQIEShape* shape = conditions->getHcalShape();
+  const HcalDbService* theDbService=conditions.product(); 
+  //  const HcalQIEShape* shape = conditions->getHcalShape();
+
 
   // get the digis themselves
   edm::Handle<HBHEDigiCollection> hcalDigis;
@@ -2578,6 +2584,9 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
       const HBHEDataFrame &digi=(*it);
       HcalDetId cell = digi.id();
 
+      const HcalQIECoder* m_coder = theDbService->getHcalCoder(digi.id());
+      const HcalQIEShape*   shape = theDbService->getHcalShape(m_coder);
+
       // still need to check on valid digis; don't want to include bad channels in digi check
       if (std::find(badChannels_.begin(),
 		    badChannels_.end(),
@@ -2587,7 +2596,7 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
 	  //std::cout <<"\t("<<cell.ieta()<<","<<cell.iphi()<<","<<cell.depth()<<")"<<  std::endl;
 	  continue;
 	}
-      DetId detcell=(DetId)cell;
+      //      DetId detcell=(DetId)cell;
 
       // get the calibrations and coder
       const HcalCalibrations& calibrations=conditions->getHcalCalibrations(cell);
