@@ -112,10 +112,10 @@
 #include "Geometry/CaloGeometry/interface/CaloGeometry.h" 
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h" 
 #include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
-// #include "CalibCalorimetry/HcalAlgos/interface/HcalLogicalMapGenerator.h"
-// #include "CondFormats/HcalObjects/interface/HcalLogicalMap.h"
+#include "CalibCalorimetry/HcalAlgos/interface/HcalLogicalMapGenerator.h"
+#include "CondFormats/HcalObjects/interface/HcalLogicalMap.h"
 
-// // CSC segments
+// CSC segments
 #include "DataFormats/CSCRecHit/interface/CSCSegment.h"
 #include "DataFormats/CSCRecHit/interface/CSCSegmentCollection.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
@@ -386,7 +386,7 @@ private:
   double studyTowerMaxEta_;
 
   // Hcal Logical map (ieta-iphi->hardware) object
-  //  HcalLogicalMap logicalMap_;  
+  HcalLogicalMap* logicalMap_;  
   
   // bad channel status to mask;
   HcalChannelQuality* chanquality_;
@@ -546,13 +546,6 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   if (doRecHits_) log += " rechits";
 
   edm::LogInfo("StoppedHSCPTree") << "Going to fill " << log << std::endl;
-
-  // edm::ESHandle<HcalTopology> topo;
-  // iSetup.get<IdealGeometryRecord>().get(topo);
-  // HcalLogicalMapGenerator gen;
-  // //  logicalMap_=new HcalLogicalMap(gen.createMap()); // old 
-  // //  int mapIOV = 5 // 5 = Remapping HO ring 0 for SiPMs; see http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/test/maptester_cfg.py
-  // logicalMap_ = gen.createMap(&(*topo)); 
   
   const float epsilon = 0.001;
   Surface::RotationType rot; // unit rotation matrix
@@ -605,6 +598,14 @@ StoppedHSCPTreeProducer::beginJob()
 void 
 StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& iSetup)
 {
+
+  // For example of how to get HcalLogicalMap, see http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/test/MapTester.cc  
+  edm::ESHandle<HcalTopology> topo;
+  iSetup.get<IdealGeometryRecord>().get(topo);
+  HcalLogicalMapGenerator gen;
+  logicalMap_ = new HcalLogicalMap(gen.createMap(&(*topo)));  
+
+
   // Get PDT Table if MC
   if (isMC_)
     iSetup.getData(fPDGTable);
@@ -2359,8 +2360,8 @@ StoppedHSCPTreeProducer::doHcalRecHits(const edm::Event& iEvent)
 	rh.ieta  = (*hit).id().ieta();
 	rh.iphi  = (*hit).id().iphi();
 	rh.depth = (*hit).id().depth();
-	// rh.RBXindex = logicalMap_.getHcalFrontEndId(hit->detid()).rbxIndex();
-	// rh.RMindex  = logicalMap_.getHcalFrontEndId(hit->detid()).rm();
+	rh.RBXindex = logicalMap_->getHcalFrontEndId(hit->detid()).rbxIndex();
+	rh.RMindex  = logicalMap_->getHcalFrontEndId(hit->detid()).rm();
 	event_->addRecHit(rh);
 
 	count++;
@@ -2584,6 +2585,8 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
       const HBHEDataFrame &digi=(*it);
       HcalDetId cell = digi.id();
 
+      // For example of how to get Hcal shape, see 
+      // http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/src/HcalPedestalAnalysis.cc?v=CMSSW_7_1_8#0145
       const HcalQIECoder* m_coder = theDbService->getHcalCoder(digi.id());
       const HcalQIEShape*   shape = theDbService->getHcalShape(m_coder);
 
