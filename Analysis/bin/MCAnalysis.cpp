@@ -636,7 +636,7 @@ void MCAnalysis::efficiencyStudy() {
   double outerDT = 0.000001; // avoid divide by zero
   int innerDT = 0;
 
-  double testPhi;
+  double testPhi = -1.;
   double maxDeltaPhi = -1.;
   for (unsigned idt = 0; idt<event_->DTSegment_N; idt++){
     if (idt == 0) {

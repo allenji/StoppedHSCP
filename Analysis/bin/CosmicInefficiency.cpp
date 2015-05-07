@@ -146,8 +146,8 @@ void CosmicInefficiency::loop() {
       std::cout << "Processing " << i << "th event of " <<maxEvents_<< std::endl;
     }
 
-    unsigned nRPC = event_->rpcHit_N;
-    unsigned nDT  = event_->DTSegment_N;
+    //    unsigned nRPC = event_->rpcHit_N;
+    //    unsigned nDT  = event_->DTSegment_N;
 
     /************* REMOVE THIS LINE IN REAL ANALYSIS ***************/
     //if ((nRPC < 5 || nRPC > 15) || (nDT < 5 || nDT > 17)) continue;

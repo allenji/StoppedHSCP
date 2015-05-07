@@ -15,8 +15,8 @@
 Livetime::Livetime(LhcFills* lhcFills) :
   lhcFills_(lhcFills),
   runLumiPairs_(0),
-  runList_(0),
-  fillList_(0)
+  fillList_(0), 
+  runList_(0)
 {
 
 }

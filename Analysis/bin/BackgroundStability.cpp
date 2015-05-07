@@ -231,15 +231,15 @@ void BackgroundStability::loop() {
     int bxWrtBunch  = event_->bxWrtBunch;
     double e        = event_->jetE[0];
     double eta      = event_->jetEta[0];
-    double phi      = event_->jetPhi[0];
+    //    double phi      = event_->jetPhi[0];
     unsigned n60    = event_->jetN60[0];
     unsigned n90    = event_->jetN90[0];
     unsigned ntow   = event_->nTowerSameiPhi;
-    double fiphi    = event_->leadingIPhiFractionValue;
-    bool bh         = event_->beamHalo_CSCLoose;
+    //    double fiphi    = event_->leadingIPhiFractionValue;
+    //    bool bh         = event_->beamHalo_CSCLoose;
     unsigned nmu    = event_->mu_N;
     unsigned ndt    = event_->DTSegment_N;
-    unsigned nrpc   = event_->rpcHit_N;
+    //    unsigned nrpc   = event_->rpcHit_N;
     unsigned ncsc   = event_->cscSeg_N;
     unsigned ntrk   = event_->track_N;
     unsigned nvtx   = event_->nVtx;
@@ -250,10 +250,10 @@ void BackgroundStability::loop() {
     bool isCosmic2  = ndt > 0;
     bool isCosmic3  = !cuts_.cosmicVeto3();
     bool isBeamHalo = ncsc > 0;
-    bool isBeamHalo2 = bh;
+    //    bool isBeamHalo2 = bh;
     bool isBeamGas  = ntrk > 1;
     bool isVtx      = nvtx > 0;
-    bool isUnid     = (!isNoise && !isCosmic && !isBeamHalo && !isBeamGas && !isVtx);
+    //    bool isUnid     = (!isNoise && !isCosmic && !isBeamHalo && !isBeamGas && !isVtx);
 
     bool isRBXNoise = false;
     if (event_->hpd_N > 0) {

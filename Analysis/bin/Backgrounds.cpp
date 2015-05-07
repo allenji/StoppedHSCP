@@ -538,7 +538,7 @@ void Backgrounds::loop() {
       
       //std::cout << "Testing DTs...";
 
-      double testPhi;
+      double testPhi = -1;
       double maxDeltaPhi = -1;
       double maxDeltaJetPhi = -1.;
       for (unsigned idt = 0; idt<event_->DTSegment_N; idt++) {
@@ -832,7 +832,7 @@ void Backgrounds::loop() {
 
     for (int j=0; j<8; ++j) {
       for (int k=0; k<8; ++k) {
-	if (((overlap>>j)&0x1 > 0) && ((overlap>>k)&0x1 > 0)) overlap_->Fill(j, k);
+	if ((((overlap>>j)&0x1) > 0) && (((overlap>>k)&0x1) > 0)) overlap_->Fill(j, k);
       }
     }
 
