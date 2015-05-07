@@ -18,7 +18,7 @@ public:
 
   /// return a new event vertex
   //virtual CLHEP::Hep3Vector* newVertex();
-  virtual HepMC::FourVector* newVertex() ;
+  virtual HepMC::FourVector* newVertex(CLHEP::HepRandomEngine*);
   
   virtual TMatrixD* GetInvLorentzBoost() {
     return 0;

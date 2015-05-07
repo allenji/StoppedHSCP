@@ -19,7 +19,7 @@ namespace gen {
 	void produce( edm::Event& fEvt, const edm::EventSetup& iSetup );
 	  
    protected:
-	void generateEvent();
+	void generateEvent(CLHEP::HepRandomEngine*);
 	
    private:
 

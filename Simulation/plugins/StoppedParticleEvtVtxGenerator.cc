@@ -7,15 +7,19 @@
 
 #include "HepMC/SimpleVector.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Utilities/interface/RandomNumberGenerator.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+//#include "CLHEP/Units/PhysicalConstants.h"
+#include "./PhysicalConstants.h"
 
 // dirty trick to work around encapsulation of EventVertexGenerators package
 #include "IOMC/EventVertexGenerators/src/BaseEvtVtxGenerator.cc" 
+
+#include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 
 StoppedParticleEvtVtxGenerator::StoppedParticleEvtVtxGenerator(const edm::ParameterSet & pset) 
   : BaseEvtVtxGenerator(pset),
@@ -26,7 +30,7 @@ StoppedParticleEvtVtxGenerator::StoppedParticleEvtVtxGenerator(const edm::Parame
     mStopPointProducer(pset.getUntrackedParameter<std::string>("stopPointInputTag", "g4SimHits")),
     mTimeMin (pset.getParameter<double>( "timeOffsetMin") * ns * c_light),
     mTimeMax (pset.getParameter<double>( "timeOffsetMax") * ns * c_light),
-    mRandom (new CLHEP::RandFlat(getEngine())),
+//    mRandom (new CLHEP::RandFlat(getEngine())),
     mVx(0.),
     mVy(0.),
     mVz(0.)
@@ -40,9 +44,9 @@ StoppedParticleEvtVtxGenerator::~StoppedParticleEvtVtxGenerator() {}
 
 
 void StoppedParticleEvtVtxGenerator::produce(edm::Event& evt, const edm::EventSetup& ) {
-
+	edm::Service<RandomNumberGenerator> rng;
+	CLHEP::HepRandomEngine* engine = &rng->getEngine(evt.streamID());
   getStoppingPoint(evt);
-
   if (isStoppedEvent) {
     Handle<HepMCProduct> HepMCEvt ;
     
@@ -50,7 +54,7 @@ void StoppedParticleEvtVtxGenerator::produce(edm::Event& evt, const edm::EventSe
     
     // generate new vertex & apply the shift 
     //
-    HepMCEvt->applyVtxGen( newVertex() ) ;
+    HepMCEvt->applyVtxGen( newVertex(engine) ) ;
     
     //HepMCEvt->LorentzBoost( 0., 142.e-6 );
     HepMCEvt->boostToLab( GetInvLorentzBoost(), "vertex" );
@@ -91,6 +95,7 @@ void StoppedParticleEvtVtxGenerator::getStoppingPoint(edm::Event& iEvent) {
     name = std::string(nn);
     isStoppedEvent = true;
    }
+//mmand to make the stage1 config file is:
   else {  // or from the event
 
     edm::Handle<std::vector<std::string> > names;
@@ -132,7 +137,7 @@ void StoppedParticleEvtVtxGenerator::getStoppingPoint(edm::Event& iEvent) {
 
 
 
-HepMC::FourVector* StoppedParticleEvtVtxGenerator::newVertex() {
+HepMC::FourVector* StoppedParticleEvtVtxGenerator::newVertex(CLHEP::HepRandomEngine* engine) {
 
   mVt = CLHEP::RandFlat::shoot (mTimeMin, mTimeMax);
   if (!fVertex) fVertex = new HepMC::FourVector(mVx, mVy, mVz, mVt);
