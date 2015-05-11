@@ -13,8 +13,8 @@
 
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Units/SystemOfUnits.h"
-//#include "CLHEP/Units/PhysicalConstants.h"
-#include "./PhysicalConstants.h"
+#include "CLHEP/Units/PhysicalConstants.h"
+//#include "./PhysicalConstants.h"
 
 // dirty trick to work around encapsulation of EventVertexGenerators package
 #include "IOMC/EventVertexGenerators/src/BaseEvtVtxGenerator.cc" 
