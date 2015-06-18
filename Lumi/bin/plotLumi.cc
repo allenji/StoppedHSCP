@@ -87,11 +87,11 @@ int main (int argc, const char* argv[]) {
 	LumiSummaryRecord lumiData;
 	if (reader.getSummary(run, section, &lumiData)) {
 	  time_t sectionStartTime = runStartTime + time_t(lumiData.startOrbit*ORBITTIME);
-	  time_t sectionStopTime = runStartTime + time_t((lumiData.startOrbit+lumiData.numOrbits)*ORBITTIME);
+	  //	  time_t sectionStopTime = runStartTime + time_t((lumiData.startOrbit+lumiData.numOrbits)*ORBITTIME);
 	  time_t sectionRelativeTime = sectionStartTime - startHistUTime;
-	  double sectionLength = lumiData.numOrbits*ORBITTIME;
+	  //	  double sectionLength = lumiData.numOrbits*ORBITTIME;
 	  double instLumi = lumiData.instLumi * 1406 / 60.21 / 1.e-30 / LSTIME; // s^-1*cm^-2
-	  double lumi = lumiData.instLumi*sectionLength;
+	  //	  double lumi = lumiData.instLumi*sectionLength;
 	  hLumiScan.Fill (sectionRelativeTime, 0.1 * instLumi);
 	  if (jfr.goodLB (run, section)) hLumiScanGood.Fill (sectionRelativeTime, 0.1 * instLumi);
 	      if (fill >= 1375 && fill <= 1427)  {

@@ -149,7 +149,7 @@ namespace shscp {
       return;
     }
     for (fs::directory_iterator dir_itr(dir); dir_itr != fs::directory_iterator(); ++dir_itr) {
-      string filename = dir_itr->path().filename();
+      string filename = dir_itr->path().filename().c_str();
       // parse file name
       string::size_type pos1 = filename.find('_');
       if (pos1 == string::npos) continue;

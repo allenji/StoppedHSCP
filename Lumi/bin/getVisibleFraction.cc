@@ -196,7 +196,7 @@ void getVisibleFraction2 (double tau, const JsonFileReader& jfr, const AllLumiDa
 	// cerr << "missing information for run/section " << measuredRun << '/' <<  measuredSection << endl;
 	continue;
       }
-      time_t sectionTime = lumiDataTo->time();
+      //      time_t sectionTime = lumiDataTo->time();
       double lumiPrevious = integralLumi[measuredRun][measuredSection];
       double contribution = lumiPrevious + lumiSelfEffect (*lumiDataTo, tau);
       //double contribution = lumiSelfEffect (*lumiDataTo, tau);
