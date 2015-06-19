@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iostream>
+#include <ostream>
 
 class BasicAnalyser {
  
@@ -43,7 +45,7 @@ class BasicAnalyser {
   void printEvent();
 
   // print cut values
-  void printCutValues(ostream& o);
+  void printCutValues(std::ostream& o);
 
   // get cuts
   const Cuts& cuts() { return cuts_; }

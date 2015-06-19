@@ -188,7 +188,7 @@ void BasicAnalyser::printEvent() {
 }
 
 
-void BasicAnalyser::printCutValues(ostream& o) {
+void BasicAnalyser::printCutValues(std::ostream& o) {
 
   o << "Stopped HSCP Event" << std::endl;
   o << "  run            = " << event_->run << "\t" << std::endl;
