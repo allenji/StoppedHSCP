@@ -111,7 +111,7 @@ void Analyser::readWatchedEvents() {
 
   // open file
   std::string fname("watchedEvents.txt");
-  std::ifstream file(fname.c_str(), ifstream::in);
+  std::ifstream file(fname.c_str(), std::ifstream::in);
 
   // read lines until we find the current run
   std::string line;
@@ -168,7 +168,7 @@ void Analyser::printEvent() {
 }
 
 
-void Analyser::printCutValues(ostream& o) {
+void Analyser::printCutValues(std::ostream& o) {
 
   o << "Stopped HSCP Event" << std::endl;
   o << "  run            = " << event_->run << "\t" << std::endl;
