@@ -18,13 +18,15 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 
 # geometry & magnetic field
-process.load('Configuration.Geometry.GeometryIdeal_cff')
-process.load("Configuration.StandardSequences.MagneticField_38T_cff")
+#process.load('Configuration.Geometry.GeometryIdeal_cff')
+#process.load("Configuration.StandardSequences.MagneticField_38T_cff")
+process.load('Configuration.Geometry.GeometryExtended2015Reco_cff')
+process.load('Configuration.StandardSequences.MagneticField_38T_PostLS1_cff')
+
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
 # conditions
-process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
-
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 # HLT bit filter
 process.load('HLTrigger.HLTfilters.hltHighLevel_cfi')
 process.hltHighLevel.TriggerResultsTag = cms.InputTag("TriggerResults","","HLT")
@@ -50,9 +52,9 @@ process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
 process.HBHENoiseFilterResultProducer.minNumIsolatedNoiseChannels = cms.int32(999999)
 process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumE = cms.double(999999.)
 process.HBHENoiseFilterResultProducer.minIsolatedNoiseSumEt = cms.double(999999.)
-process.HBHENoiseFilterResultProducer.useTS4TS5=False
-process.HBHENoiseFilterResultProducer.maxRatio=0.96
-process.HBHENoiseFilterResultProducer.minRatio=0.70
+#process.HBHENoiseFilterResultProducer.useTS4TS5=False
+#process.HBHENoiseFilterResultProducer.maxRatio=0.96
+#process.HBHENoiseFilterResultProducer.minRatio=0.70
 
 # get RAW data
 process.load('Configuration/StandardSequences/RawToDigi_Data_cff')
@@ -63,7 +65,7 @@ process.load('StoppedHSCP/Ntuples/stoppedHSCPTree_cfi')
 
 # get jet corrections
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-process.stoppedHSCPTree.jetCorrectorServiceName = cms.untracked.string("ak5CaloL2L3")
+process.stoppedHSCPTree.jetCorrectorServiceName = cms.untracked.string("ak4CaloL2L3")
 #process.ak5CaloL1Offset.useCondDB = False
 
 # histogram producer
@@ -96,7 +98,7 @@ process.ntuple = cms.Path(
 
 # TTree output file
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('stoppedHSCPTree.root')
+    fileName = cms.string('stoppedHSCPTree_34.root')
 )
 
 
@@ -108,7 +110,10 @@ process.source = cms.Source ("PoolSource",fileNames = readFiles, secondaryFileNa
 
 
 # Global Tag and input files
-process.GlobalTag.globaltag = "GR10_P_V10::All"
+
+from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9', '')
+
 
 readFiles.extend( [
 

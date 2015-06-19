@@ -535,6 +535,8 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   hcalDetIds_(0),
   hcalDetJets_(0)
 {
+	std::cout<<"Begin class setup"<<std::endl;
+	StoppedHSCPEvent::Class()->SetCanSplit(1);
   // set up output
   tree_=fs_->make<TTree>("StoppedHSCPTree", "");
   tree_->Branch("events", "StoppedHSCPEvent", &event_, 64000, 1);
@@ -555,6 +557,7 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   const float barrelHalfLength = 433.20;
 
   theHCALbarrel_ = new BoundCylinder( Surface::PositionType(0,0,0), rot, SimpleCylinderBounds( -epsilon, barrelRadius+epsilon, -barrelHalfLength, barrelHalfLength));
+	std::cout<<"End class setup"<<std::endl;
 
 }
 
@@ -598,13 +601,16 @@ StoppedHSCPTreeProducer::beginJob()
 void 
 StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& iSetup)
 {
+	std::cout<<"Here start beginRun"<<std::endl;
 
   // For example of how to get HcalLogicalMap, see http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/test/MapTester.cc  
   edm::ESHandle<HcalTopology> topo;
   iSetup.get<IdealGeometryRecord>().get(topo);
+	const HcalTopology &htopo(*topo);
   HcalLogicalMapGenerator gen;
   logicalMap_ = new HcalLogicalMap(gen.createMap(&(*topo)));  
 
+	std::cout<<"a check point"<<std::endl;
 
   // Get PDT Table if MC
   if (isMC_)
@@ -745,7 +751,7 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
 
 
   // end of HLT checks
-
+	std::cout<<"Checkpoint B"<<std::endl;
   // HCAL geometry to calculate eta/phi for CaloRecHits
   edm::ESHandle<CaloGeometry> caloGeomRec;
   iSetup.get<CaloGeometryRecord>().get(caloGeomRec);
@@ -757,6 +763,7 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
   iSetup.get<HcalChannelQualityRcd>().get(p);
   //std::cout <<"BEGIN RUN STARTED!"<<std::endl;
   chanquality_= new HcalChannelQuality(*p.product());
+	chanquality_->setTopo(&htopo);
   std::vector<DetId> mydetids = chanquality_->getAllChannels();
   for (std::vector<DetId>::const_iterator i = mydetids.begin();i!=mydetids.end();++i)
     {
@@ -783,6 +790,7 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
   currentColls_ = fills_.getCollisionsFromRun(iRun.runAuxiliary().run());
   currentBunches_ = fills_.getBunchesFromRun(iRun.runAuxiliary().run());
   currentFill_  = fills_.getFillFromRun(iRun.runAuxiliary().run());
+	std::cout<<"the end of begin run"<<std::endl;
 
 }
 
@@ -798,41 +806,55 @@ StoppedHSCPTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup
 {
  
   event_ = new StoppedHSCPEvent();
- 
+	std::cout<<"now we are doing MC"<<std::endl; 
   if (isMC_) doMC(iEvent);
  
   // event & trigger info
+	std::cout<<"now we are doing EventInfo"<<std::endl; 
   doEventInfo(iEvent);
+	std::cout<<"now we are doing Trigger"<<std::endl; 
   doTrigger(iEvent, iSetup);
 
   // general RECO info
   doJets(iEvent, iSetup);
+	std::cout<<"now we are doing GlobalCalo"<<std::endl; 
   doGlobalCalo(iEvent); // uses ntuple calotower info for leadingIphiFractionValue
+	std::cout<<"now we are doing Muon"<<std::endl; 
   doMuons(iEvent);
 
 
+	std::cout<<"now we are doing BeamHalo"<<std::endl; 
   doBeamHalo(iEvent);
+	std::cout<<"now we are doing Vertex"<<std::endl; 
   doVertices(iEvent);
   doTracks(iEvent, iSetup);
 
   // HCAL noise summary info
+	std::cout<<"now we are doing HcalNoise"<<std::endl; 
   doHcalNoise(iEvent);
 
   // HCAL RecHits & flags
+	std::cout<<"now we are doing HcalRecHits"<<std::endl; 
   doHcalRecHits(iEvent);
+	std::cout<<"now we are doing DoHFRecHits"<<std::endl; 
   doHFRecHits(iEvent);
 
   // CSC segments
+	std::cout<<"now we are doing CscSegments"<<std::endl; 
   doCscSegments(iEvent, iSetup);
+	std::cout<<"now we are doing CscHits"<<std::endl; 
   doCscHits(iEvent, iSetup); 
+	std::cout<<"now we are doing Slices"<<std::endl; 
   doSlices(iEvent, iSetup);  // HE info
 
   // DT Segments
+	std::cout<<"now we are doing MuonDTs"<<std::endl; 
   doMuonDTs(iEvent,iSetup);
 
   // RPCs
+	std::cout<<"now we are doing MuonRPCs"<<std::endl; 
   doMuonRPCs(iEvent,iSetup);
-
+	std::cout<<"111111111"<<std::endl;
   // digi based variables
   if (doDigis_) {
     doTimingFromDigis(iEvent, iSetup);
@@ -867,6 +889,7 @@ StoppedHSCPTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup
     event_->removeTowers(); // caloTowers don't need to be saved, unless specified in cfg
 
   // fill TTree
+   
   tree_->Fill();
   
   delete event_;
