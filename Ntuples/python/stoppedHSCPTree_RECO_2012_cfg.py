@@ -23,3 +23,11 @@ process.stoppedHSCPTree.hltPathJetE70NoBptx3BXNoHalo = hltPathJetE70NoBptx3BXNoH
 
 process.stoppedHSCPTree.hltL3Tag = hltL3Tag
 process.stoppedHSCPTree.doDigis=False 
+
+
+process.source= cms.Source("PoolSource",fileNames=cms.untracked.vstring(
+    'file:Run247920_numEvent5.root'
+    )
+)
+
+
