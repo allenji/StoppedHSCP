@@ -24,8 +24,8 @@ stoppedHSCPTree = cms.EDAnalyzer(
     
     # jets
     jetCorrectorServiceName = cms.untracked.string("ak5CaloJetsL1L2L3Residual"),
-    jetTag = cms.untracked.InputTag("iterativeCone5CaloJets"),
-    jetAK5Tag = cms.untracked.InputTag("ak5CaloJets"),
+    jetTag = cms.untracked.InputTag("ak4CaloJets"),
+    jetAK5Tag = cms.untracked.InputTag("ak4CaloJets"),
     jetMinEnergy = cms.untracked.double(1.),
     jetMaxEta = cms.untracked.double(1.3),
 
