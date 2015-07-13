@@ -98,12 +98,14 @@ process.ntuple = cms.Path(
 
 # TTree output file
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('stoppedHSCPTree_34.root')
+    fileName = cms.string('stoppedHSCPTree.root')
 )
 
 
 # input files
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
+process.maxEvents = cms.untracked.PSet( 
+    input = cms.untracked.int32(-1) 
+)
 readFiles = cms.untracked.vstring()
 secFiles = cms.untracked.vstring()
 process.source = cms.Source ("PoolSource",fileNames = readFiles, secondaryFileNames = secFiles)
