@@ -186,7 +186,7 @@ bool Luminosity::goodData(unsigned run, unsigned ls) {
 	if (goodLumis_.get<jsonxx::Array>(runstr).has<jsonxx::Array>(i)) {
 	  if (goodLumis_.get<jsonxx::Array>(runstr).get<jsonxx::Array>(i).has<double>(0) &&
 	      goodLumis_.get<jsonxx::Array>(runstr).get<jsonxx::Array>(i).has<double>(1)) {
-	    if (ls >= (unsigned) goodLumis_.get<jsonxx::Array>(runstr).get<jsonxx::Array>(i).get<double>(0) ||
+	    if (ls >= (unsigned) goodLumis_.get<jsonxx::Array>(runstr).get<jsonxx::Array>(i).get<double>(0) &&
 		ls <= (unsigned) goodLumis_.get<jsonxx::Array>(runstr).get<jsonxx::Array>(i).get<double>(1) ) {
 	      good = true;
 	    }
