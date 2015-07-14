@@ -50,7 +50,7 @@ process.source.lumisToProcess.extend(myLumis)
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.threshold = 'DEBUG'
 process.MessageLogger.categories.append('StoppedHSCPTreeProducer')
-#process.MessageLogger.debugModules = cms.untracked.vstring('stoppedHSCPTree')  # uncomment to turn on debugging statements  
+process.MessageLogger.debugModules = cms.untracked.vstring('stoppedHSCPTree')  # uncomment to turn on debugging statements  
 process.MessageLogger.cerr.DEBUG = cms.untracked.PSet(
     limit = cms.untracked.int32(-1)
 )

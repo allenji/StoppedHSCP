@@ -463,8 +463,8 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   l1JetsTag_(iConfig.getUntrackedParameter<std::string>("l1JetsTag",std::string("l1extraParticles"))),
   l1BitsTag_(iConfig.getUntrackedParameter<edm::InputTag>("l1BitsTag",edm::InputTag("gtDigis"))),
   l1JetNoBptxName_(iConfig.getUntrackedParameter<std::string>("l1JetNoBptxName",std::string("L1_SingleJet20_NotBptxOR"))),  
-  l1JetNoBptxNoHaloName_(iConfig.getUntrackedParameter<std::string>("l1JetNoBptxNoHaloName",std::string("L1_SingleJet20_NotBptxOR_NotMuBeamHalo"))),
-  l1Jet32NoBptxNoHaloName_(iConfig.getUntrackedParameter<std::string>("l1Jet32NoBptxNoHaloName",std::string("L1_SingleJet32_NotBptxOR_NotMuBeamHalo"))),
+  l1JetNoBptxNoHaloName_(iConfig.getUntrackedParameter<std::string>("l1JetNoBptxNoHaloName",std::string("L1_SingleJetC20_NotBptxOR_NotMuBeamHalo"))),
+  l1Jet32NoBptxNoHaloName_(iConfig.getUntrackedParameter<std::string>("l1Jet32NoBptxNoHaloName",std::string("L1_SingleJetC32_NotBptxOR_NotMuBeamHalo"))),
   
 //  l1BptxPlusName_(iConfig.getUntrackedParameter<std::string>("l1BptxPlusName",std::string(""))),  
 //  l1BptxMinusName_(iConfig.getUntrackedParameter<std::string>("l1BptxMinusName",std::string(""))),  
@@ -1335,18 +1335,6 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
   if (!lumiDetails.isValid()) {
     edm::LogWarning("MissingProduct") << "Could not retreive LumiDetails collection for " 
 				      << event_->run << ":" << event_->lb << ":" << event_->id; 
-    return; 
-  } else if (!lumiDetails->isValid()) {
-    edm::LogWarning("doEventInfo()") << "LumiDetails collection invalid (empty) for "
-				     << event_->run << ":" << event_->lb << ":" 
-				     << event_->id;
-    return;
-  }
-
-
-  if (!lumiDetails.isValid()) {
-    edm::LogError("MissingProduct") << "Could not retreive LumiDetails collection for " 
-				    << event_->run << ":" << event_->lb << ":" << event_->id; 
     return; 
   } else if (!lumiDetails->isValid()) {
     edm::LogWarning("doEventInfo()") << "LumiDetails collection invalid (empty) for "
