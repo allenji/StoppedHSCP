@@ -6,8 +6,9 @@ stoppedHSCPTree = cms.EDAnalyzer(
     # trigger
     l1BitsTag = cms.untracked.InputTag("gtDigis"),
     l1JetsTag = cms.untracked.string("l1extraParticles"),
-    l1JetNoBptxName = cms.untracked.string("L1_SingleJet20_NotBptxOR"),  
-    l1JetNoBptxNoHaloName = cms.untracked.string("L1_SingleJet20_NotBptxOR_NotMuBeamHalo"),  
+    l1JetNoBptxName         = cms.untracked.string("L1_SingleJetC20_NotBptxOR"),  
+    l1JetNoBptxNoHaloName   = cms.untracked.string("L1_SingleJetC20_NotBptxOR"),  
+    l1Jet32NoBptxNoHaloName = cms.untracked.string("L1_SingleJetC32_NotBptxOR"),  
     l1BptxName = cms.untracked.string("L1Tech_BPTX_plus_AND_minus"),
     l1MuBeamHaloName = cms.untracked.string("L1_SingleMuBeamHalo"),
     hltResultsTag = cms.untracked.InputTag("TriggerResults","","HLT"),

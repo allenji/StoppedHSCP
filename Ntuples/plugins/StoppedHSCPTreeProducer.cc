@@ -177,6 +177,7 @@
 //
 
 using namespace reco;
+using namespace std;  
 
 class StoppedHSCPTreeProducer : public edm::EDAnalyzer {
 public:
@@ -355,6 +356,7 @@ private:
   edm::InputTag DTRecHitsTag_;
   edm::InputTag DT4DSegmentsTag_;
   edm::InputTag rpcRecHitsTag_;
+
 
   // HLT config helper
   HLTConfigProvider hltConfig_;
@@ -1323,36 +1325,50 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
   event_->bxWrtBunch = bxWrtBunch;
 
 
-  // Get luminosity and intensity info from LumiDetails. 
-  // NOTE: luminosity values are calibrated but uncorrected
-  // see also: https://twiki.cern.ch/twiki/bin/view/CMS/LumiCalc#LumiDetails
-  edm::Handle<LumiDetails> lumiDetails;
-  iEvent.getLuminosityBlock().getByLabel("lumiProducer",lumiDetails); 
-
-  edm::Handle<LumiSummary> lumiSummary;
-  iEvent.getLuminosityBlock().getByLabel("lumiSummary",lumiSummary); 
+  // FIXME:  Add back in the LumiDetails and LumiSummary information.
+  edm::Handle<LumiScalers> lumiScalers;
+  iEvent.getByLabel("scalersRawToDigi", lumiScalers); 
   
-  if (!lumiDetails.isValid()) {
-    edm::LogWarning("MissingProduct") << "Could not retreive LumiDetails collection for " 
-				      << event_->run << ":" << event_->lb << ":" << event_->id; 
-    return; 
-  } else if (!lumiDetails->isValid()) {
-    edm::LogWarning("doEventInfo()") << "LumiDetails collection invalid (empty) for "
-				     << event_->run << ":" << event_->lb << ":" 
-				     << event_->id;
-    return;
-  }
+  // if (!lumiScalers.isValid()) {
+  //   edm::LogWarning("MissingProduct") << "Could not retreive LumiScalers collection for " 
+  // 				      << event_->run << ":" << event_->lb << ":" << event_->id; 
+  //   return; 
+  // } 
 
-  if (!lumiSummary.isValid()) {
-    edm::LogError("MissingProduct") << "Could not retreive LumiSummary collection for " 
-				    << event_->run << ":" << event_->lb << ":" << event_->id; 
-    return; 
-  } else if (!lumiSummary->isValid()) {
-    edm::LogWarning("doEventInfo()") << "LumiSummary collection invalid (empty) for "
-				     << event_->run << ":" << event_->lb << ":" 
-				     << event_->id;
-    return;
-  }
+  // edm::Handle<LumiSummary> lumiSummary;
+  // iEvent.getLuminosityBlock().getByLabel("lumiSummary",lumiSummary); 
+  
+  // if (!lumiSummary.isValid()) {
+  //   edm::LogError("MissingProduct") << "Could not retreive LumiSummary collection for " 
+  // 				    << event_->run << ":" << event_->lb << ":" << event_->id; 
+  //   return; 
+  // } else if (!lumiSummary->isValid()) {
+  //   edm::LogWarning("doEventInfo()") << "LumiSummary collection invalid (empty) for "
+  // 				     << event_->run << ":" << event_->lb << ":" 
+  // 				     << event_->id;
+  //   return;
+  // }
+
+  // cout << "Debug Wells: lumiSummary->avgInsDelLumi() = " << lumiSummary->avgInsDelLumi() << endl;
+
+  // edm::Handle<LumiDetails> lumiDetails;
+  // iEvent.getLuminosityBlock().getByToken(tok_lumi, lumiDetails); 
+
+  // //  iEvent.getLuminosityBlock().getByLabel("lumiProducer",lumiDetails); 
+
+  // if (!lumiDetails.isValid()) {
+  //   edm::LogWarning("MissingProduct") << "Could not retreive LumiDetails collection for " 
+  // 				      << event_->run << ":" << event_->lb << ":" << event_->id; 
+  //   return; 
+  // } else if (!lumiDetails->isValid()) {
+  //   edm::LogWarning("doEventInfo()") << "LumiDetails collection invalid (empty) for "
+  // 				     << event_->run << ":" << event_->lb << ":" 
+  // 				     << event_->id;
+  //   return;
+  // }
+
+
+
 
   // debugging
   //LogDebug ("StoppedHSCPTreeProducer")  << "Lumi version: " << lumiDetails->lumiVersion();
@@ -1370,9 +1386,14 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
     if ( iBx > (int)bxPerOrbit-1) iBx -= bxPerOrbit;
     if (debug) std::cout << iBx << "\t";
     
-    Double_t lumiByBx = lumiDetails->lumiValue(LumiDetails::kOCC1,iBx)*6.37;
-    Double_t beam1Intensity = lumiDetails->lumiBeam1Intensity(iBx);
-    Double_t beam2Intensity = lumiDetails->lumiBeam2Intensity(iBx);
+    // Double_t lumiByBx       = lumiDetails->lumiValue(LumiDetails::kOCC1,iBx)*6.37;
+    // Double_t beam1Intensity = lumiDetails->lumiBeam1Intensity(iBx);
+    // Double_t beam2Intensity = lumiDetails->lumiBeam2Intensity(iBx);
+
+    Double_t lumiByBx       = -1;
+    Double_t beam1Intensity = -1;
+    Double_t beam2Intensity = -1; 
+
     //LogDebug ("StoppedHSCPTreeProducer")  << "...Retreived details";
 
     event_->beam1Intensity.at(i+2) = beam1Intensity;
@@ -1382,8 +1403,8 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
   } 
 
   // Get average instantaneous luminosity delivered for this LS
-  event_->lsLuminosity = lumiSummary->avgInsDelLumi();
-  event_->lsLuminosityErr = lumiSummary->avgInsDelLumiErr();
+  event_->lsLuminosity    = -1;
+  event_->lsLuminosityErr = -1; 
 
   if (debug) {
     std::cout<<std::endl;
