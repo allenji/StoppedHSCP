@@ -1326,8 +1326,8 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
 
 
   // FIXME:  Add back in the LumiDetails and LumiSummary information.
-  edm::Handle<LumiScalers> lumiScalers;
-  iEvent.getByLabel("scalersRawToDigi", lumiScalers); 
+  // edm::Handle<LumiScalers> lumiScalers;
+  // iEvent.getByLabel("scalersRawToDigi", lumiScalers); 
   
   // if (!lumiScalers.isValid()) {
   //   edm::LogWarning("MissingProduct") << "Could not retreive LumiScalers collection for " 
