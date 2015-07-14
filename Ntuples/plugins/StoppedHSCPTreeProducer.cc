@@ -5,9 +5,9 @@
 // 
 /**\class StoppedHSCPTreeProducer StoppedHSCPTreeProducer.cc StoppedHSCP/Analysis/src/StoppedHSCPTreeProducer.cc
 
- Description: Produce Stopped HSCP tree
+   Description: Produce Stopped HSCP tree
 
- Implementation:
+   Implementation:
      
 */
 //
@@ -185,10 +185,10 @@ public:
   
   
 private:
-  virtual void beginJob() ;
-  virtual void beginRun(const edm::Run&, const edm::EventSetup&) ;
+  virtual void beginJob();
+  virtual void beginRun(const edm::Run&, const edm::EventSetup&);
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
-  virtual void endJob() ;
+  virtual void endJob();
   
   void doEventInfo(const edm::Event&);
 
@@ -240,25 +240,25 @@ public:
   
   struct l1jet_gt : public std::binary_function<l1extra::L1JetParticle, l1extra::L1JetParticle, bool> {
     bool operator()(const l1extra::L1JetParticle& x, const l1extra::L1JetParticle& y) {
-      return ( x.et() > y.et() ) ;
+      return ( x.et() > y.et() );
     }
   };
 
   struct jete_gt : public std::binary_function<reco::CaloJet, reco::CaloJet, bool> {
     bool operator()(const reco::CaloJet& x, const reco::CaloJet& y) {
-      return ( x.energy() > y.energy() ) ;
+      return ( x.energy() > y.energy() );
     }
   };
   
   struct calotower_gt : public std::binary_function<CaloTower, CaloTower, bool> {
     bool operator()(const CaloTower& x, const CaloTower& y) {
-      return ( x.hadEnergy() > y.hadEnergy() ) ;
+      return ( x.hadEnergy() > y.hadEnergy() );
     }
   };
 
   struct rechit_gt : public std::binary_function<CaloRecHit, CaloRecHit, bool> {
     bool operator()(const CaloRecHit& x, const CaloRecHit& y) {
-      return ( x.energy() > y.energy() ) ;
+      return ( x.energy() > y.energy() );
     }
   };
   
@@ -273,13 +273,13 @@ public:
 	  double sampley = y.sample(i).nominal_fC();
 	  TotalY += sampley;
 	}
-      return ( TotalX > TotalY ) ;
+      return ( TotalX > TotalY );
     }
   };
   
   struct digiDetId_eq : public std::binary_function<HBHEDataFrame, DetId, bool> {
     bool operator()(const HBHEDataFrame& digi, const DetId& id) const {
-      return ( digi.id() == id ) ;
+      return ( digi.id() == id );
     }
   };
   
@@ -431,7 +431,7 @@ private:
   const TransientTrackBuilder    *theTTBuilder_;
   edm::ESHandle<MagneticField>   theMF_;
   TrajectoryStateOnSurface       stateAtHCAL_; 
-  mutable PropagatorWithMaterial *forwardPropagator_ ;
+  mutable PropagatorWithMaterial *forwardPropagator_;
   PropagationDirection           dir_;
   BoundCylinder                  *theHCALbarrel_;
 
@@ -466,8 +466,8 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   l1JetNoBptxNoHaloName_(iConfig.getUntrackedParameter<std::string>("l1JetNoBptxNoHaloName",std::string("L1_SingleJet20_NotBptxOR_NotMuBeamHalo"))),
   l1Jet32NoBptxNoHaloName_(iConfig.getUntrackedParameter<std::string>("l1Jet32NoBptxNoHaloName",std::string("L1_SingleJet32_NotBptxOR_NotMuBeamHalo"))),
   
-  //  l1BptxPlusName_(iConfig.getUntrackedParameter<std::string>("l1BptxPlusName",std::string(""))),  
-  //  l1BptxMinusName_(iConfig.getUntrackedParameter<std::string>("l1BptxMinusName",std::string(""))),  
+//  l1BptxPlusName_(iConfig.getUntrackedParameter<std::string>("l1BptxPlusName",std::string(""))),  
+//  l1BptxMinusName_(iConfig.getUntrackedParameter<std::string>("l1BptxMinusName",std::string(""))),  
   l1BptxName_(iConfig.getUntrackedParameter<std::string>("l1BptxName",std::string("L1Tech_BPTX_plus_AND_minus"))),  
   l1MuBeamHaloName_(iConfig.getUntrackedParameter<std::string>("l1MuBeamHaloName",std::string("L1_SingleMuBeamHalo"))),  
   hltResultsTag_(iConfig.getUntrackedParameter<edm::InputTag>("hltResultsTag",edm::InputTag("TriggerResults","","HLT"))),
@@ -535,8 +535,8 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   hcalDetIds_(0),
   hcalDetJets_(0)
 {
-	std::cout<<"Begin class setup"<<std::endl;
-	StoppedHSCPEvent::Class()->SetCanSplit(1);
+  LogDebug ("StoppedHSCPTreeProducer") <<"Begin class setup";
+  StoppedHSCPEvent::Class()->SetCanSplit(1);
   // set up output
   tree_=fs_->make<TTree>("StoppedHSCPTree", "");
   tree_->Branch("events", "StoppedHSCPEvent", &event_, 64000, 1);
@@ -547,7 +547,7 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   if (doCaloTowers_) log += " calotowers";
   if (doRecHits_) log += " rechits";
 
-  edm::LogInfo("StoppedHSCPTree") << "Going to fill " << log << std::endl;
+  edm::LogInfo("StoppedHSCPTree") << "Going to fill " << log;
   
   const float epsilon = 0.001;
   Surface::RotationType rot; // unit rotation matrix
@@ -557,15 +557,15 @@ StoppedHSCPTreeProducer::StoppedHSCPTreeProducer(const edm::ParameterSet& iConfi
   const float barrelHalfLength = 433.20;
 
   theHCALbarrel_ = new BoundCylinder( Surface::PositionType(0,0,0), rot, SimpleCylinderBounds( -epsilon, barrelRadius+epsilon, -barrelHalfLength, barrelHalfLength));
-	std::cout<<"End class setup"<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer") <<"End class setup";
 
 }
 
 
 StoppedHSCPTreeProducer::~StoppedHSCPTreeProducer() {
 
-   // do anything here that needs to be done at desctruction time
-   // (e.g. close files, deallocate resources etc.)
+  // do anything here that needs to be done at desctruction time
+  // (e.g. close files, deallocate resources etc.)
 
 }
 
@@ -579,21 +579,21 @@ void
 StoppedHSCPTreeProducer::beginJob()
 {
   
-  std::cout << " l1JetsTag_; " << l1JetsTag_ << std::endl;
-  std::cout << " l1BitsTag_; " <<l1BitsTag_ << std::endl;
-  std::cout << " l1JetNoBptxName_; " <<  l1JetNoBptxName_ << std::endl;
-  std::cout << " l1JetNoBptxNoHaloName_; " << l1JetNoBptxNoHaloName_ << std::endl;
-  std::cout << " l1Jet32NoBptxNoHaloName_; " <<  l1Jet32NoBptxNoHaloName_ << std::endl;
-  std::cout << " l1BptxName_; " <<  l1BptxName_ << std::endl;
-  std::cout << " l1MuBeamHaloName_; " <<  l1MuBeamHaloName_ << std::endl;
-  std::cout << " hltResultsTag_; " << hltResultsTag_ << std::endl;
-  std::cout << " hltEventTag_; " << hltEventTag_ << std::endl;
-  std::cout << " hltPathJetNoBptx_; " << hltPathJetNoBptx_ << std::endl;
-  std::cout << " hltPathJetNoBptxNoHalo_; " << hltPathJetNoBptxNoHalo_ << std::endl;
-  std::cout << " hltPathJetNoBptx3BXNoHalo_; " << hltPathJetNoBptx3BXNoHalo_ << std::endl;
-  std::cout << " hltPathJetE50NoBptx3BXNoHalo_; " << hltPathJetE50NoBptx3BXNoHalo_ << std::endl;
-  std::cout << " hltPathJetE70NoBptx3BXNoHalo_; " << hltPathJetE70NoBptx3BXNoHalo_ << std::endl;
-  std::cout << " hltL3Tag_; " << hltL3Tag_ << std::endl << std::endl;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1JetsTag_; " << l1JetsTag_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1BitsTag_; " <<l1BitsTag_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1JetNoBptxName_; " <<  l1JetNoBptxName_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1JetNoBptxNoHaloName_; " << l1JetNoBptxNoHaloName_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1Jet32NoBptxNoHaloName_; " <<  l1Jet32NoBptxNoHaloName_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1BptxName_; " <<  l1BptxName_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " l1MuBeamHaloName_; " <<  l1MuBeamHaloName_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltResultsTag_; " << hltResultsTag_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltEventTag_; " << hltEventTag_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltPathJetNoBptx_; " << hltPathJetNoBptx_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltPathJetNoBptxNoHalo_; " << hltPathJetNoBptxNoHalo_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltPathJetNoBptx3BXNoHalo_; " << hltPathJetNoBptx3BXNoHalo_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltPathJetE50NoBptx3BXNoHalo_; " << hltPathJetE50NoBptx3BXNoHalo_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltPathJetE70NoBptx3BXNoHalo_; " << hltPathJetE70NoBptx3BXNoHalo_;
+  LogDebug ("StoppedHSCPTreeProducer")  << " hltL3Tag_; " << hltL3Tag_;
   
 }
 
@@ -601,16 +601,16 @@ StoppedHSCPTreeProducer::beginJob()
 void 
 StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& iSetup)
 {
-	std::cout<<"Here start beginRun"<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer") <<"Here start beginRun";
 
   // For example of how to get HcalLogicalMap, see http://cmslxr.fnal.gov/source/CalibCalorimetry/HcalAlgos/test/MapTester.cc  
   edm::ESHandle<HcalTopology> topo;
   iSetup.get<IdealGeometryRecord>().get(topo);
-	const HcalTopology &htopo(*topo);
+  const HcalTopology &htopo(*topo);
   HcalLogicalMapGenerator gen;
   logicalMap_ = new HcalLogicalMap(gen.createMap(&(*topo)));  
 
-	std::cout<<"a check point"<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer") <<"a check point";
 
   // Get PDT Table if MC
   if (isMC_)
@@ -635,14 +635,14 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
       }
     if (hltPathIndexJetNoBptx_==(hltConfig_.triggerNames()).size())
       {
-	edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX:  Could not find an HLT path matching "<<hltPathJetNoBptx_<<".  Branch will not be filled."<<std::endl;
+	edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX:  Could not find an HLT path matching "<<hltPathJetNoBptx_<<".  Branch will not be filled.";
 	doHltBit1_=false;
       }
     else
-      edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptx_ << " index is " << hltPathIndexJetNoBptx_ << std::endl;
+      edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptx_ << " index is " << hltPathIndexJetNoBptx_;
   } // end of try loop
   catch (cms::Exception e) {
-    edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX:  Could not find an HLT path matching " << hltPathJetNoBptx_ << ".  Branch will not be filled" << std::endl;
+    edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX:  Could not find an HLT path matching " << hltPathJetNoBptx_ << ".  Branch will not be filled";
     doHltBit1_ = false;
   }
   // HLT Path -- No BPTX, No Halo
@@ -660,14 +660,14 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
       }
     if (hltPathIndexJetNoBptxNoHalo_==(hltConfig_.triggerNames()).size())
       {
-	edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTXNoHalo:  Could not find an HLT path matching "<<hltPathJetNoBptxNoHalo_<<".  Branch will not be filled."<<std::endl;
+	edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTXNoHalo:  Could not find an HLT path matching "<<hltPathJetNoBptxNoHalo_<<".  Branch will not be filled.";
 	doHltBit2_=false;
       }
     else
-      edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptxNoHalo_ << " index is " << hltPathIndexJetNoBptxNoHalo_ << std::endl;
+      edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptxNoHalo_ << " index is " << hltPathIndexJetNoBptxNoHalo_;
   }
   catch (cms::Exception e) {
-    edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTXNoHalo:  Could not find an HLT path matching " << hltPathJetNoBptxNoHalo_ << ".  Branch will not be filled" << std::endl;
+    edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTXNoHalo:  Could not find an HLT path matching " << hltPathJetNoBptxNoHalo_ << ".  Branch will not be filled";
     doHltBit2_ = false;
   }
   // HLT Path -- No BPTX, No Halo, 3BX
@@ -683,17 +683,17 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
 	    hltPathIndexJetNoBptx3BXNoHalo_ = hltConfig_.triggerIndex(trigName); // could just set to i, but let's be careful...
 	  }
       }
-    edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptx3BXNoHalo_ << " index is " << hltPathIndexJetNoBptx3BXNoHalo_ << std::endl;
+    edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptx3BXNoHalo_ << " index is " << hltPathIndexJetNoBptx3BXNoHalo_;
     if (hltPathIndexJetNoBptx3BXNoHalo_==(hltConfig_.triggerNames()).size())
       {
-	edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX3BXNoHalo:  Could not find an HLT path matching "<<hltPathJetNoBptx3BXNoHalo_<<".  Branch will not be filled."<<std::endl;
+	edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX3BXNoHalo:  Could not find an HLT path matching "<<hltPathJetNoBptx3BXNoHalo_<<".  Branch will not be filled.";
 	doHltBit3_=false;
       }
     else
-      edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptx3BXNoHalo_ << " index is " << hltPathIndexJetNoBptx3BXNoHalo_ << std::endl;
+      edm::LogInfo("StoppedHSCPTree") << hltPathJetNoBptx3BXNoHalo_ << " index is " << hltPathIndexJetNoBptx3BXNoHalo_;
   }
   catch (cms::Exception e) {
-    edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX3BXNoHalo:  Could not find an HLT path matching " << hltPathJetNoBptx3BXNoHalo_ << ".  Branch will not be filled" << std::endl;
+    edm::LogWarning("StoppedHSCPTree") << "HLTJetNoBPTX3BXNoHalo:  Could not find an HLT path matching " << hltPathJetNoBptx3BXNoHalo_ << ".  Branch will not be filled";
     doHltBit3_ = false;
   }
   // HLT Path -- JetE50 No BPTX, No Halo, 3BX
@@ -709,17 +709,17 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
 	    hltPathIndexJetE50NoBptx3BXNoHalo_ = hltConfig_.triggerIndex(trigName); // could just set to i, but let's be careful...
 	  }
       }
-    edm::LogInfo("StoppedHSCPTree") << hltPathJetE50NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE50NoBptx3BXNoHalo_ << std::endl;
+    edm::LogInfo("StoppedHSCPTree") << hltPathJetE50NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE50NoBptx3BXNoHalo_;
     if (hltPathIndexJetE50NoBptx3BXNoHalo_==(hltConfig_.triggerNames()).size())
       {
-	edm::LogWarning("StoppedHSCPTree") << "HLTJetE50NoBPTX3BXNoHalo:  Could not find an HLT path matching "<<hltPathJetE50NoBptx3BXNoHalo_<<".  Branch will not be filled."<<std::endl;
+	edm::LogWarning("StoppedHSCPTree") << "HLTJetE50NoBPTX3BXNoHalo:  Could not find an HLT path matching "<<hltPathJetE50NoBptx3BXNoHalo_<<".  Branch will not be filled.";
 	doHltBit4_=false;
       }
     else
-      edm::LogInfo("StoppedHSCPTree") << hltPathJetE50NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE50NoBptx3BXNoHalo_ << std::endl;
+      edm::LogInfo("StoppedHSCPTree") << hltPathJetE50NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE50NoBptx3BXNoHalo_;
   }
   catch (cms::Exception e) {
-    edm::LogWarning("StoppedHSCPTree") << "HLTJetE50NoBPTX3BXNoHalo:  Could not find an HLT path matching " << hltPathJetE50NoBptx3BXNoHalo_ << ".  Branch will not be filled" << std::endl;
+    edm::LogWarning("StoppedHSCPTree") << "HLTJetE50NoBPTX3BXNoHalo:  Could not find an HLT path matching " << hltPathJetE50NoBptx3BXNoHalo_ << ".  Branch will not be filled";
     doHltBit4_ = false;
   }
   // HLT Path -- JetE70 No BPTX, No Halo, 3BX (new for 2012)
@@ -735,23 +735,23 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
 	    hltPathIndexJetE70NoBptx3BXNoHalo_ = hltConfig_.triggerIndex(trigName); // could just set to i, but let's be careful...
 	  }
       }
-    edm::LogInfo("StoppedHSCPTree") << hltPathJetE70NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE70NoBptx3BXNoHalo_ << std::endl;
+    edm::LogInfo("StoppedHSCPTree") << hltPathJetE70NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE70NoBptx3BXNoHalo_;
     if (hltPathIndexJetE70NoBptx3BXNoHalo_==(hltConfig_.triggerNames()).size())
       {
-	edm::LogWarning("StoppedHSCPTree") << "HLTJetE70NoBPTX3BXNoHalo:  Could not find an HLT path matching "<<hltPathJetE70NoBptx3BXNoHalo_<<".  Branch will not be filled."<<std::endl;
+	edm::LogWarning("StoppedHSCPTree") << "HLTJetE70NoBPTX3BXNoHalo:  Could not find an HLT path matching "<<hltPathJetE70NoBptx3BXNoHalo_<<".  Branch will not be filled.";
 	doHltBit5_=false;
       }
     else
-      edm::LogInfo("StoppedHSCPTree") << hltPathJetE70NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE70NoBptx3BXNoHalo_ << std::endl;
+      edm::LogInfo("StoppedHSCPTree") << hltPathJetE70NoBptx3BXNoHalo_ << " index is " << hltPathIndexJetE70NoBptx3BXNoHalo_;
   }
   catch (cms::Exception e) {
-    edm::LogWarning("StoppedHSCPTree") << "HLTJetE70NoBPTX3BXNoHalo:  Could not find an HLT path matching " << hltPathJetE70NoBptx3BXNoHalo_ << ".  Branch will not be filled" << std::endl;
+    edm::LogWarning("StoppedHSCPTree") << "HLTJetE70NoBPTX3BXNoHalo:  Could not find an HLT path matching " << hltPathJetE70NoBptx3BXNoHalo_ << ".  Branch will not be filled";
     doHltBit5_ = false;
   }
 
 
   // end of HLT checks
-	std::cout<<"Checkpoint B"<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer") <<"Checkpoint B";
   // HCAL geometry to calculate eta/phi for CaloRecHits
   edm::ESHandle<CaloGeometry> caloGeomRec;
   iSetup.get<CaloGeometryRecord>().get(caloGeomRec);
@@ -761,9 +761,9 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
   badChannels_.clear();
   edm::ESHandle<HcalChannelQuality> p;
   iSetup.get<HcalChannelQualityRcd>().get(p);
-  //std::cout <<"BEGIN RUN STARTED!"<<std::endl;
+  //LogDebug ("StoppedHSCPTreeProducer")  <<"BEGIN RUN STARTED!";
   chanquality_= new HcalChannelQuality(*p.product());
-	chanquality_->setTopo(&htopo);
+  chanquality_->setTopo(&htopo);
   std::vector<DetId> mydetids = chanquality_->getAllChannels();
   for (std::vector<DetId>::const_iterator i = mydetids.begin();i!=mydetids.end();++i)
     {
@@ -772,9 +772,9 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
       if (i->subdetId()!=HcalBarrel && i->subdetId()!=HcalEndcap) continue;
       HcalDetId id=HcalDetId(*i);
       int status=(chanquality_->getValues(id))->getValue();
-      //std::cout <<"checking "<<id<<"  STATUS = "<<status<<std::endl;
+      //LogDebug ("StoppedHSCPTreeProducer")  <<"checking "<<id<<"  STATUS = "<<status;
       if ((status&badchannelstatus_)==0) continue;
-      //std::cout <<"\tBAD CHANNEL FOUND!"<<id<<"  STATUS = "<<status<<std::endl;
+      //LogDebug ("StoppedHSCPTreeProducer")  <<"\tBAD CHANNEL FOUND!"<<id<<"  STATUS = "<<status;
       badChannels_.insert(id);
     }
 
@@ -790,7 +790,7 @@ StoppedHSCPTreeProducer::beginRun(edm::Run const & iRun, edm::EventSetup const& 
   currentColls_ = fills_.getCollisionsFromRun(iRun.runAuxiliary().run());
   currentBunches_ = fills_.getBunchesFromRun(iRun.runAuxiliary().run());
   currentFill_  = fills_.getFillFromRun(iRun.runAuxiliary().run());
-	std::cout<<"the end of begin run"<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer") <<"the end of begin run";
 
 }
 
@@ -804,57 +804,57 @@ StoppedHSCPTreeProducer::endJob() {
 void
 StoppedHSCPTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
- 
+
   event_ = new StoppedHSCPEvent();
-	std::cout<<"now we are doing MC"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing MC"; 
   if (isMC_) doMC(iEvent);
  
   // event & trigger info
-	std::cout<<"now we are doing EventInfo"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing EventInfo"; 
   doEventInfo(iEvent);
-	std::cout<<"now we are doing Trigger"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing Trigger"; 
   doTrigger(iEvent, iSetup);
 
   // general RECO info
   doJets(iEvent, iSetup);
-	std::cout<<"now we are doing GlobalCalo"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing GlobalCalo"; 
   doGlobalCalo(iEvent); // uses ntuple calotower info for leadingIphiFractionValue
-	std::cout<<"now we are doing Muon"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing Muon"; 
   doMuons(iEvent);
 
 
-	std::cout<<"now we are doing BeamHalo"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing BeamHalo"; 
   doBeamHalo(iEvent);
-	std::cout<<"now we are doing Vertex"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing Vertex"; 
   doVertices(iEvent);
   doTracks(iEvent, iSetup);
 
   // HCAL noise summary info
-	std::cout<<"now we are doing HcalNoise"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing HcalNoise"; 
   doHcalNoise(iEvent);
 
   // HCAL RecHits & flags
-	std::cout<<"now we are doing HcalRecHits"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing HcalRecHits"; 
   doHcalRecHits(iEvent);
-	std::cout<<"now we are doing DoHFRecHits"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing DoHFRecHits"; 
   doHFRecHits(iEvent);
 
   // CSC segments
-	std::cout<<"now we are doing CscSegments"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing CscSegments"; 
   doCscSegments(iEvent, iSetup);
-	std::cout<<"now we are doing CscHits"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing CscHits"; 
   doCscHits(iEvent, iSetup); 
-	std::cout<<"now we are doing Slices"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing Slices"; 
   doSlices(iEvent, iSetup);  // HE info
 
   // DT Segments
-	std::cout<<"now we are doing MuonDTs"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing MuonDTs"; 
   doMuonDTs(iEvent,iSetup);
 
   // RPCs
-	std::cout<<"now we are doing MuonRPCs"<<std::endl; 
+  LogDebug ("StoppedHSCPTreeProducer") <<"now we are doing MuonRPCs"; 
   doMuonRPCs(iEvent,iSetup);
-	std::cout<<"111111111"<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer") <<"Finished doMuonRPC's.";
   // digi based variables
   if (doDigis_) {
     doTimingFromDigis(iEvent, iSetup);
@@ -940,7 +940,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
     
   }
   else {
-    if (!mcMissing_) edm::LogWarning("MissingProduct") << "MC information not found.  Branch will not be filled" << std::endl;
+    if (!mcMissing_) edm::LogWarning("MissingProduct") << "MC information not found.  Branch will not be filled";
     mcMissing_ = true;
   }
 
@@ -957,11 +957,11 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
   iEvent.getByLabel (mcProducer_, "StoppedParticlesTime", times);
   if (!names.isValid() || !xs.isValid() || !ys.isValid() || !zs.isValid() || !times.isValid()){
     edm::LogWarning ("MissingProduct") << "StoppedParticles* vectors not available. Branch "
-				       << "will not be filled." << std::endl;
+				       << "will not be filled.";
   } else if (names->size() != xs->size() || xs->size() != ys->size() || ys->size() != zs->size()) {
     edm::LogWarning ("StoppedHSCPTreeProducer") << "mismatch array sizes name/x/y/z:"
 						<< names->size() << '/' << xs->size() << '/' 
-						<< ys->size() << '/' << zs->size() << std::endl;
+						<< ys->size() << '/' << zs->size();
   } else {
     if (names->size() > 0) {
       for (size_t i = 0; i < names->size(); ++i) {
@@ -975,8 +975,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	const HepPDT::ParticleData* PData = fPDGTable->particle(names->at(i));
 	if (PData == 0) {
 	  LogDebug ("StoppedHSCPTreeProducer") << "could not get particle data from the"
-					       << " table for " << names->at(i)
-					       << std::endl;
+					       << " table for " << names->at(i);
 	} else {
 	  //	  mass = PData->mass();
 	  //	  charge = PData->charge();
@@ -1001,12 +1000,12 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
   iEvent.getByLabel(hepProducer_, hepMCproduct);
   if (!hepMCproduct.isValid()) {
     edm::LogWarning ("MissingProduct") << "Stage 1 HepMCproduct not found. Branch "
-				     << "will not be filled." << std::endl;
+				       << "will not be filled.";
   } else {
     const HepMC::GenEvent* mc = hepMCproduct->GetEvent();
     if( mc == 0 ) {
       throw edm::Exception( edm::errors::InvalidReference ) << "HepMC has null pointer "
-							    << "to GenEvent" << std::endl;
+							    << "to GenEvent";
     }
     // Uncomment this to print the full HepMC record for each event (for debugging or whatever)
     //mc->print( std::cout );
@@ -1036,7 +1035,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	if(PData==0) {
 	  LogDebug ("StoppedHSCPTreeProducer") << "Error getting HepPDT data table for "
 					       << p->pdg_id() << ". Unable to fill charge "
-					       << "of sparticle." << std::endl;
+					       << "of sparticle.";
 	} else {
 	  charge = PData->charge();
 	}
@@ -1072,7 +1071,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	if(PData==0) {
 	  LogDebug ("StoppedHSCPTreeProducer") << "Error getting HepPDT data table for "
 					       << p->pdg_id() << ". Unable to fill charge "
-					       << "of rhadron." << std::endl;
+					       << "of rhadron.";
 	} else {
 	  charge = PData->charge();
 	}
@@ -1096,12 +1095,12 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
   iEvent.getByLabel(hepDecayProducer_, hepMCDecayproduct);
   if (!hepMCDecayproduct.isValid()) {
     edm::LogWarning ("MissingProduct") << "Stage 1 HepMC decay product not found. Branch "
-				     << "will not be filled." << std::endl;
+				       << "will not be filled.";
   } else {
     const HepMC::GenEvent* mc = hepMCDecayproduct->GetEvent();
     if( mc == 0 ) {
       throw edm::Exception( edm::errors::InvalidReference ) << "HepMC has null pointer "
-							    << "to GenEvent" << std::endl;
+							    << "to GenEvent";
     }
     // Uncomment this to print the full HepMC record for each event (for debugging or whatever)
     //mc->print( std::cout );
@@ -1117,8 +1116,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
       int targetId = 0;
       if (event_->mcSparticle_N == 0) {
 	LogDebug ("StoppedHSCPTreeProducer") << "mcSparticle branch not filled. Cannot fill "
-					     << "mcDaughter branch."
-					     << std::endl;
+					     << "mcDaughter branch."; 
 	continue;
       } else {
 	targetId = event_->mcSparticleId[0]%100;
@@ -1139,7 +1137,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	if(PData==0) {
 	  LogDebug ("StoppedHSCPTreeProducer") << "Error getting HepPDT data table for "
 					       << p->pdg_id() << ". Unable to fill charge "
-					       << "of particle." << std::endl;
+					       << "of particle.";
 	} else {
 	  charge = PData->charge();
 	}
@@ -1172,7 +1170,7 @@ void StoppedHSCPTreeProducer::doMC(const edm::Event& iEvent) {
 	if(PData==0) {
 	  LogDebug ("StoppedHSCPTreeProducer") << "Error getting HepPDT data table for "
 					       << p->pdg_id() << ". Unable to fill charge "
-					       << "of neutralino." << std::endl;
+					       << "of neutralino.";
 	} else {
 	  charge = PData->charge();
 	}
@@ -1206,7 +1204,7 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
   unsigned long fill        = fills_.getFillFromRun(run);
 
   double time               = iEvent.time().unixTime(); // .value() which is in units of I have no fucking clue.
-  std::cout << "Time: " << time <<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer")  << "Time: " << time;
 
   // calculate event time from run start + LS, orbit, BX
   ULong64_t bxSinceRunStart = (((lb * orbitsPerLB) + orbit) * bxPerOrbit) + bx;
@@ -1227,7 +1225,7 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
 	bxAfter  = (bx + bxPerOrbit) - bxLast;
 	bxBefore = bx - bxNext;
 	
-	//std::cout << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore << std::endl;
+	//LogDebug ("StoppedHSCPTreeProducer")  << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore;
 
       }
       // special case if event is after last collision
@@ -1237,7 +1235,7 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
 	bxAfter  = bx - bxLast;
 	bxBefore = (bx - bxPerOrbit) - bxNext;
 
-	//std::cout << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore << std::endl;
+	//LogDebug ("StoppedHSCPTreeProducer")  << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore;
       }
       // general case
       else {      
@@ -1247,7 +1245,7 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
 	  bxAfter = bx - bxLast;
 	  bxBefore = bx - bxNext;
 	}
-	//std::cout << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore << std::endl;
+	//LogDebug ("StoppedHSCPTreeProducer")  << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore;
       }
     }
     
@@ -1271,7 +1269,7 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
 	bxAfterBunch  = (bx + bxPerOrbit) - bxLast;
 	bxBeforeBunch = bx - bxNext;
 	
-	//std::cout << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore << std::endl;
+	//LogDebug ("StoppedHSCPTreeProducer")  << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore;
 
       }
       // special case if event is after last collision
@@ -1281,7 +1279,7 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
 	bxAfterBunch  = bx - bxLast;
 	bxBeforeBunch = (bx - bxPerOrbit) - bxNext;
 
-	//	std::cout << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore << std::endl;
+	//	LogDebug ("StoppedHSCPTreeProducer")  << bx << " : " << bxLast << " : " << bxNext << " : " << bxAfter << " : " << bxBefore;
       }
       // general case
       else {      
@@ -1299,13 +1297,12 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
   // compute relative BX
   int bxWrtBunch    = ( abs(bxAfterBunch) <= abs(bxBeforeBunch) ? bxAfterBunch : bxBeforeBunch );
   /**
-  std::cout << "bxAfterCollision = " << bxAfter
-  	    <<"\nbxBeforeCollision = "<< bxBefore
-  	    <<"\nbxWrtCollision = "<< bxWrt
-  	    <<"\nbxAfterBunch = "<< bxAfterBunch
-  	    <<"\nbxBeforeBunch = "<< bxBeforeBunch
-  	    <<"\nbxWrtBunch = "<< bxWrtBunch
-  	    << std::endl;
+     LogDebug ("StoppedHSCPTreeProducer")  << "bxAfterCollision = " << bxAfter
+     <<"\nbxBeforeCollision = "<< bxBefore
+     <<"\nbxWrtCollision = "<< bxWrt
+     <<"\nbxAfterBunch = "<< bxAfterBunch
+     <<"\nbxBeforeBunch = "<< bxBeforeBunch
+     <<"\nbxWrtBunch = "<< bxWrtBunch; 
   */
 
   // set variables in ntuple
@@ -1337,48 +1334,45 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
   
   if (!lumiDetails.isValid()) {
     edm::LogWarning("MissingProduct") << "Could not retreive LumiDetails collection for " 
-				    << event_->run << ":" << event_->lb << ":" << event_->id
-				    <<std::endl;
+				      << event_->run << ":" << event_->lb << ":" << event_->id; 
     return; 
   } else if (!lumiDetails->isValid()) {
     edm::LogWarning("doEventInfo()") << "LumiDetails collection invalid (empty) for "
-						   << event_->run << ":" << event_->lb << ":" 
-						   << event_->id << std::endl;
+				     << event_->run << ":" << event_->lb << ":" 
+				     << event_->id;
     return;
   }
 
 
   if (!lumiDetails.isValid()) {
     edm::LogError("MissingProduct") << "Could not retreive LumiDetails collection for " 
-				    << event_->run << ":" << event_->lb << ":" << event_->id
-				    <<std::endl;
+				    << event_->run << ":" << event_->lb << ":" << event_->id; 
     return; 
   } else if (!lumiDetails->isValid()) {
     edm::LogWarning("doEventInfo()") << "LumiDetails collection invalid (empty) for "
-						   << event_->run << ":" << event_->lb << ":" 
-						   << event_->id << std::endl;
+				     << event_->run << ":" << event_->lb << ":" 
+				     << event_->id;
     return;
   }
 
   if (!lumiSummary.isValid()) {
     edm::LogError("MissingProduct") << "Could not retreive LumiSummary collection for " 
-				    << event_->run << ":" << event_->lb << ":" << event_->id
-				    <<std::endl;
+				    << event_->run << ":" << event_->lb << ":" << event_->id; 
     return; 
   } else if (!lumiSummary->isValid()) {
     edm::LogWarning("doEventInfo()") << "LumiSummary collection invalid (empty) for "
-						   << event_->run << ":" << event_->lb << ":" 
-						   << event_->id << std::endl;
+				     << event_->run << ":" << event_->lb << ":" 
+				     << event_->id;
     return;
   }
 
   // debugging
-  //std::cout << "Lumi version: " << lumiDetails->lumiVersion() << std::endl;
+  //LogDebug ("StoppedHSCPTreeProducer")  << "Lumi version: " << lumiDetails->lumiVersion();
   bool debug = false;
   if (bx < 4 || bx > 3560) {
     std::cout << "\nEvent " << event_->run << ":" << event_->lb << ":" << event_->id
 	      << "\nbx = " << bx 
-	      << "\n==================================" << std::endl;
+	      << "\n==================================";
     debug = true;
   }
 
@@ -1391,12 +1385,12 @@ void StoppedHSCPTreeProducer::doEventInfo(const edm::Event& iEvent) {
     Double_t lumiByBx = lumiDetails->lumiValue(LumiDetails::kOCC1,iBx)*6.37;
     Double_t beam1Intensity = lumiDetails->lumiBeam1Intensity(iBx);
     Double_t beam2Intensity = lumiDetails->lumiBeam2Intensity(iBx);
-    //std::cout << "...Retreived details" << std::endl;
+    //LogDebug ("StoppedHSCPTreeProducer")  << "...Retreived details";
 
     event_->beam1Intensity.at(i+2) = beam1Intensity;
     event_->beam2Intensity.at(i+2) = beam2Intensity;
     event_->lumiByBx.at(i+2) = lumiByBx;
-    //std::cout << "...Saved details" << std::endl;    
+    //LogDebug ("StoppedHSCPTreeProducer")  << "...Saved details";    
   } 
 
   // Get average instantaneous luminosity delivered for this LS
@@ -1423,7 +1417,7 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
 
   // get GT data
   edm::ESHandle<L1GtTriggerMenu> menuRcd;
-  iSetup.get<L1GtTriggerMenuRcd>().get(menuRcd) ;
+  iSetup.get<L1GtTriggerMenuRcd>().get(menuRcd);
   const L1GtTriggerMenu* menu = menuRcd.product();
   
   edm::Handle<L1GlobalTriggerReadoutRecord> gtReadoutRecord;
@@ -1467,12 +1461,12 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
   if (errorAlgo!=0) {
     event_->algoTriggerPrescaleIndex=-999;
     edm::LogError ("StoppedHSCPTreeProducer") << "Error retreiving algo trigger prescale index: " 
-					 << errorAlgo << std::endl;
+					      << errorAlgo;
   }
   if (errorTech!=0) {
     event_->techTriggerPrescaleIndex=-999;
     edm::LogError ("StoppedHSCPTreeProducer") << "Error retreiving tech trigger prescale index: " 
-					 << errorTech << std::endl;
+					      << errorTech;
   }
 
   event_->gtAlgoWord0 = gtAlgoWord0;
@@ -1492,7 +1486,7 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
   if (errorCode!=0) {
     event_->l1JetNoBptxPrescale=-999;
     edm::LogWarning ("StoppedHSCPTreeProducer") << "Error retreiving l1JetNoBptxPrescale factor: " 
-					 << errorCode << std::endl;
+						<< errorCode;
   }
   
   event_->l1JetNoBptxNoHaloPrescale = l1gtutils->prescaleFactor(iEvent,
@@ -1501,7 +1495,7 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
   if (errorCode!=0) {
     event_->l1JetNoBptxNoHaloPrescale=-999;
     edm::LogWarning ("StoppedHSCPTreeProducer") << "Error retreiving l1JetNoBptxNoHaloPrescale factor: " 
-					 << errorCode << std::endl;
+						<< errorCode;
   }
 
   event_->l1Jet32NoBptxNoHaloPrescale = l1gtutils->prescaleFactor(iEvent,
@@ -1510,7 +1504,7 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
   if (errorCode!=0) {
     event_->l1Jet32NoBptxNoHaloPrescale=-999;
     edm::LogWarning ("StoppedHSCPTreeProducer") << "Error retreiving l1Jet32NoBptxNoHaloPrescale factor: " 
-					 << errorCode << std::endl;
+						<< errorCode;
   }
 
   // L1 trigger bits for -2..+2 BX
@@ -1563,11 +1557,11 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
     if (doHltBit5_ && hltPathIndexJetE70NoBptx3BXNoHalo_ < HLTR->size()) hltBitJetE70NoBptx3BXNoHalo = HLTR->accept(hltPathIndexJetE70NoBptx3BXNoHalo_); 
   }
   else {
-    if (doHltBit1_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit1.  Branch will not be filled" << std::endl;
-    if (doHltBit2_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit2.  Branch will not be filled" << std::endl;
-    if (doHltBit3_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit3.  Branch will not be filled" << std::endl;
-    if (doHltBit4_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit4.  Branch will not be filled" << std::endl;
-    if (doHltBit5_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit5.  Branch will not be filled" << std::endl;
+    if (doHltBit1_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit1.  Branch will not be filled";
+    if (doHltBit2_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit2.  Branch will not be filled";
+    if (doHltBit3_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit3.  Branch will not be filled";
+    if (doHltBit4_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit4.  Branch will not be filled";
+    if (doHltBit5_) edm::LogWarning("MissingProduct") << "HLT information not found for HltBit5.  Branch will not be filled";
     doHltBit1_ = false;
     doHltBit2_ = false;
     doHltBit3_ = false;
@@ -1618,14 +1612,14 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
     
   }
   else {
-    if (!l1JetsMissing_) edm::LogWarning("MissingProduct") << "L1 information not found.  Branch will not be filled" << std::endl;
+    if (!l1JetsMissing_) edm::LogWarning("MissingProduct") << "L1 information not found.  Branch will not be filled";
     l1JetsMissing_ = true;
   }
 
   // get HLT jets
   edm::Handle<trigger::TriggerEvent> trgEvent;
 
-  //std::cout <<"hltEventTag = "<<hltEventTag_<<std::endl;
+  //LogDebug ("StoppedHSCPTreeProducer")  <<"hltEventTag = "<<hltEventTag_;
   iEvent.getByLabel(hltEventTag_, trgEvent);
 
   // for Stopped HSCP L3 filter  
@@ -1634,14 +1628,14 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
     const unsigned int filterIndex (trgEvent->filterIndex(hltL3Tag_) );
 
     //   edm::LogInfo("StoppedHSCP") << "Debugging HLT...  StoppedHSCP index=" << filterIndex 
-    //				     << ",  N paths=" << trgEvent->sizeFilters() << std::endl;
+    //				     << ",  N paths=" << trgEvent->sizeFilters();
     
     if (filterIndex < trgEvent->sizeFilters()) {
             
       const trigger::TriggerObjectCollection& TOC(trgEvent->getObjects());
       const trigger::Keys& keys( trgEvent->filterKeys(filterIndex) );
 	
-      //      edm::LogInfo("StoppedHSCP") << "Found  " << keys.size() << " HLT jets" << std::endl;
+      //      edm::LogInfo("StoppedHSCP") << "Found  " << keys.size() << " HLT jets";
 
       for ( unsigned hlto = 0; 
 	    hlto < keys.size();
@@ -1649,7 +1643,7 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
 	trigger::size_type hltf = keys[hlto];
 	const trigger::TriggerObject& L3obj(TOC[hltf]);
 
-	//	edm::LogInfo("StoppedHSCP") << "HLT jet e=" << L3obj.energy() << std::endl;
+	//	edm::LogInfo("StoppedHSCP") << "HLT jet e=" << L3obj.energy();
         
 	shscp::TrigJet j;
 	j.type = 99;
@@ -1664,12 +1658,12 @@ void StoppedHSCPTreeProducer::doTrigger(const edm::Event& iEvent, const edm::Eve
     } 
     //else {
     //  edm::LogError("StoppedHSCPTreeProducer") << "Bad hltL3Tag. L3 filter index could not be found: "
-    //					       << hltL3Tag_ << std::endl;
+    //					       << hltL3Tag_;
     //}
 
   }
   else {
-    if (!hltJetsMissing_) edm::LogWarning("MissingProduct") << "TriggerEvent not found.  Branch will not be filled" << std::endl;
+    if (!hltJetsMissing_) edm::LogWarning("MissingProduct") << "TriggerEvent not found.  Branch will not be filled";
     hltJetsMissing_ = true;
   }
 							       
@@ -1681,140 +1675,148 @@ void StoppedHSCPTreeProducer::doJets(const edm::Event& iEvent, const edm::EventS
 
   const JetCorrector* jetCorrector = JetCorrector::getJetCorrector(jetCorrectorServiceName_,iSetup);
 
-   edm::Handle<CaloJetCollection> caloJets;
-   iEvent.getByLabel(jetTag_, caloJets);
-   unsigned njet=0;
+  edm::Handle<CaloJetCollection> caloJets;
+  iEvent.getByLabel(jetTag_, caloJets);
+  unsigned njet=0;
 
-   if (caloJets.isValid()) {
-     // sort jets by energy
-     std::vector<CaloJet> jets;
-     jets.insert(jets.end(), caloJets->begin(), caloJets->end());
-     std::sort(jets.begin(), jets.end(), jete_gt() );
+  LogDebug ("StoppedHSCPTreeProducer") << "about to start StoppedHSCPTreeProducer::doJets()";
 
-     for(CaloJetCollection::const_iterator it=jets.begin(); 
-	 it!=jets.end();
-	 ++it, ++njet) {
-       if (it->energy() > jetMinEnergy_) {
+  if (caloJets.isValid()) {
+    // sort jets by energy
+    std::vector<CaloJet> jets;
+    jets.insert(jets.end(), caloJets->begin(), caloJets->end());
+    std::sort(jets.begin(), jets.end(), jete_gt() );
 
-	 edm::RefToBase<reco::Jet> jetRef(edm::Ref<reco::CaloJetCollection>(caloJets,njet));  
-	 double scale = jetCorrector->correction(*it,jetRef,iEvent,iSetup);
+    // LogDebug ("StoppedHSCPTreeProducer")  << "Size of jets = " << jets.size() 
+    // 	  << ", jetMinEnergy_ = " << jetMinEnergy_; 
 
-	 // store jet in TTree
-	 shscp::Jet jet;
-	 jet.e = it->energy();
-	 jet.e_corr = it->energy()*scale;
-	 jet.et = it->et();
-	 jet.et_corr = it->et()*scale;
-	 jet.eta = it->eta();
-	 jet.phi = it->phi();
-	 jet.eEm = it->emEnergyInEB();
-	 jet.eHad = it->hadEnergyInHB();
-	 jet.eMaxEcalTow = it->maxEInEmTowers();
-	 jet.eMaxHcalTow = it->maxEInHadTowers();
-	 jet.n60 = it->n60();
-	 jet.n90 = it->n90();
-	 jet.etaMean = it->etaPhiStatistics().etaMean;
-	 jet.phiMean = it->etaPhiStatistics().phiMean;
-	 jet.etaetaMoment = it->etaPhiStatistics().etaEtaMoment;
-	 jet.phiphiMoment = it->etaPhiStatistics().phiPhiMoment;
-	 jet.etaphiMoment = it->etaPhiStatistics().etaPhiMoment;
+    for(CaloJetCollection::const_iterator it=jets.begin(); 
+	it!=jets.end();
+	++it, ++njet) {
 
-	 // Add to default jet collection and/or to studyJet collection
-	 if ((fabs(it->eta()) < jetMaxEta_))
-	   event_->addJet(jet);
-	 if (fabs(it->eta())>=studyJetMinEta_ && 
-	     fabs(it->eta())<studyJetMaxEta_)
-	   event_->addStudyJet(jet);
-	   // 	 std::cout << "Jet " << std::endl;
-// 	 std::cout << "   E=" << it->energy() << " eta=" << it->eta() << " phi=" << it->phi() << std::endl;
-	 // get towers
+      //       LogDebug ("StoppedHSCPTreeProducer")  << "  jet energy = " <<  it->energy();  
+
+      if (it->energy() > jetMinEnergy_) {
+
+	edm::RefToBase<reco::Jet> jetRef(edm::Ref<reco::CaloJetCollection>(caloJets,njet));  
+	double scale = jetCorrector->correction(*it,jetRef,iEvent,iSetup);
+
+	// store jet in TTree
+	shscp::Jet jet;
+	jet.e = it->energy();
+	jet.e_corr = it->energy()*scale;
+	jet.et = it->et();
+	jet.et_corr = it->et()*scale;
+	jet.eta = it->eta();
+	jet.phi = it->phi();
+	jet.eEm = it->emEnergyInEB();
+	jet.eHad = it->hadEnergyInHB();
+	jet.eMaxEcalTow = it->maxEInEmTowers();
+	jet.eMaxHcalTow = it->maxEInHadTowers();
+	jet.n60 = it->n60();
+	jet.n90 = it->n90();
+	jet.etaMean = it->etaPhiStatistics().etaMean;
+	jet.phiMean = it->etaPhiStatistics().phiMean;
+	jet.etaetaMoment = it->etaPhiStatistics().etaEtaMoment;
+	jet.phiphiMoment = it->etaPhiStatistics().phiPhiMoment;
+	jet.etaphiMoment = it->etaPhiStatistics().etaPhiMoment;
+
+	// Add to default jet collection and/or to studyJet collection
+	if ((fabs(it->eta()) < jetMaxEta_))
+	  event_->addJet(jet);
+	if (fabs(it->eta())>=studyJetMinEta_ && 
+	    fabs(it->eta())<studyJetMaxEta_)
+	  event_->addStudyJet(jet);
+	// 	 LogDebug ("StoppedHSCPTreeProducer")  << "Jet ";
+	// 	 LogDebug ("StoppedHSCPTreeProducer")  << "   E=" << it->energy() << " eta=" << it->eta() << " phi=" << it->phi();
+	// get towers
 	 
-	 for (int i=0; i<it->nConstituents(); ++i) {
-	   CaloTowerPtr tower = it->getCaloConstituent(i);
+	for (int i=0; i<it->nConstituents(); ++i) {
+	  CaloTowerPtr tower = it->getCaloConstituent(i);
 	   
-	   if (tower->energy() > towerMinEnergy_ &&
-	       fabs(tower->eta()) < towerMaxEta_) {
+	  if (tower->energy() > towerMinEnergy_ &&
+	      fabs(tower->eta()) < towerMaxEta_) {
 	     
-	     // write tower
-	     shscp::Tower tow;
-	     tow.e = tower->energy();
-	     tow.et = tower->et();
-	     tow.eta = tower->eta();
-	     tow.phi = tower->phi();
-	     tow.ieta = tower->ieta();
-	     tow.iphi = tower->iphi();
-	     tow.nJet = njet;
-	     tow.eHad = tower->hadEnergy();
-	     tow.etHad = tower->hadEt();
-	     tow.eEm = tower->emEnergy();
-	     tow.etEm = tower->emEt();
+	    // write tower
+	    shscp::Tower tow;
+	    tow.e = tower->energy();
+	    tow.et = tower->et();
+	    tow.eta = tower->eta();
+	    tow.phi = tower->phi();
+	    tow.ieta = tower->ieta();
+	    tow.iphi = tower->iphi();
+	    tow.nJet = njet;
+	    tow.eHad = tower->hadEnergy();
+	    tow.etHad = tower->hadEt();
+	    tow.eEm = tower->emEnergy();
+	    tow.etEm = tower->emEt();
 
-	     // Always add tower, if within appropriate eta bounds
-	     // (if doCaloTowers_==false, tower will be removed
-	     //  via removeTowers after leadingIPhiFractionValue computed)
-	     if (fabs(tower->eta()) < towerMaxEta_) 
-	       event_->addTower(tow);
+	    // Always add tower, if within appropriate eta bounds
+	    // (if doCaloTowers_==false, tower will be removed
+	    //  via removeTowers after leadingIPhiFractionValue computed)
+	    if (fabs(tower->eta()) < towerMaxEta_) 
+	      event_->addTower(tow);
 
-	     // only add "studyTower" if doCaloTowers_==true
-	     if (doCaloTowers_ && 
-		 fabs(tower->eta())>=studyTowerMinEta_ && 
-		 fabs(it->eta())<studyTowerMaxEta_)
-	       event_->addStudyTower(tow);
-	     // 	   std::cout << "  Calo tower" << std::endl;
-	     // 	   std::cout << "    eta=" << tower->eta() << " phi=" << tower->phi() << std::endl;
-	     // 	   std::cout << "    ECAL E=" << tower->emEnergy() << " HCAL E=" << tower->hadEnergy() << std::endl;
-	     // 	   std::cout << "    ECAL time : " << tower->ecalTime() << std::endl;
-	     // 	   std::cout << "    HCAL time : " << tower->hcalTime() << std::endl;
+	    // only add "studyTower" if doCaloTowers_==true
+	    if (doCaloTowers_ && 
+		fabs(tower->eta())>=studyTowerMinEta_ && 
+		fabs(it->eta())<studyTowerMaxEta_)
+	      event_->addStudyTower(tow);
+	    // 	   LogDebug ("StoppedHSCPTreeProducer")  << "  Calo tower";
+	    // 	   LogDebug ("StoppedHSCPTreeProducer")  << "    eta=" << tower->eta() << " phi=" << tower->phi();
+	    // 	   LogDebug ("StoppedHSCPTreeProducer")  << "    ECAL E=" << tower->emEnergy() << " HCAL E=" << tower->hadEnergy();
+	    // 	   LogDebug ("StoppedHSCPTreeProducer")  << "    ECAL time : " << tower->ecalTime();
+	    // 	   LogDebug ("StoppedHSCPTreeProducer")  << "    HCAL time : " << tower->hcalTime();
 	     
-	   }
-	 } // loop over nconstituents
-       } // if (it->energy>jetMinEnergy_)
-     } // loop over jets
-   } // if (caloJets.isValid())
-   else {
-     if (!jetsMissing_) edm::LogWarning("MissingProduct") << "CaloJets not found.  Branch will not be filled" << std::endl;
-     jetsMissing_ = true;
-   }
+	  }
+	} // loop over nconstituents
+      } // if (it->energy>jetMinEnergy_)
+    } // loop over jets
+  } // if (caloJets.isValid())
+  else {
+    if (!jetsMissing_) edm::LogWarning("MissingProduct") << "CaloJets not found.  Branch will not be filled";
+    jetsMissing_ = true;
+  }
  
-   edm::Handle<CaloJetCollection> ak5Jets;
-   iEvent.getByLabel(jetAK5Tag_, ak5Jets);
+  edm::Handle<CaloJetCollection> ak5Jets;
+  iEvent.getByLabel(jetAK5Tag_, ak5Jets);
    
-   if (ak5Jets.isValid()) {
+  if (ak5Jets.isValid()) {
 
-     // sort jets by energy
-     std::vector<CaloJet> jets;
-     jets.insert(jets.end(), ak5Jets->begin(), ak5Jets->end());
-     std::sort(jets.begin(), jets.end(), jete_gt() );
+    // sort jets by energy
+    std::vector<CaloJet> jets;
+    jets.insert(jets.end(), ak5Jets->begin(), ak5Jets->end());
+    std::sort(jets.begin(), jets.end(), jete_gt() );
 
-     for(CaloJetCollection::const_iterator it=jets.begin(); 
-	 it!=jets.end();
-	 ++it) {
+    for(CaloJetCollection::const_iterator it=jets.begin(); 
+	it!=jets.end();
+	++it) {
 
-       //       edm::RefToBase<reco::Jet> jetRef(edm::Ref<reco::CaloJetCollection>(ak5Jets,njet));  
-       //       double scale = caloJetCorrector->correction(*it,jetRef,iEvent,iSetup);
+      //       edm::RefToBase<reco::Jet> jetRef(edm::Ref<reco::CaloJetCollection>(ak5Jets,njet));  
+      //       double scale = caloJetCorrector->correction(*it,jetRef,iEvent,iSetup);
        
-       if (it->energy() > jetMinEnergy_) { 
-	 // store jet in TTree
-	 shscp::Jet jet;
-	 jet.et = it->et();
-	 jet.eta = it->eta();
-	 jet.phi = it->phi();
-	 jet.e = it->energy();
-	 jet.eEm = it->emEnergyInEB();
-	 jet.eHad = it->hadEnergyInHB();
-	 jet.eMaxEcalTow = it->maxEInEmTowers();
-	 jet.eMaxHcalTow = it->maxEInHadTowers();
-	 jet.n60 = it->n60();
-	 jet.n90 = it->n90();
+      if (it->energy() > jetMinEnergy_) { 
+	// store jet in TTree
+	shscp::Jet jet;
+	jet.et = it->et();
+	jet.eta = it->eta();
+	jet.phi = it->phi();
+	jet.e = it->energy();
+	jet.eEm = it->emEnergyInEB();
+	jet.eHad = it->hadEnergyInHB();
+	jet.eMaxEcalTow = it->maxEInEmTowers();
+	jet.eMaxHcalTow = it->maxEInHadTowers();
+	jet.n60 = it->n60();
+	jet.n90 = it->n90();
 
-	 if (fabs(it->eta()) < jetMaxEta_)
-	   event_->addAK5Jet(jet);
-	 if (fabs(it->eta())>=studyJetMinEta_ && 
-	     fabs(it->eta())<studyJetMaxEta_)
-	   event_->addAK5StudyJet(jet);
-       }
-     }
-   }  
+	if (fabs(it->eta()) < jetMaxEta_)
+	  event_->addAK5Jet(jet);
+	if (fabs(it->eta())>=studyJetMinEta_ && 
+	    fabs(it->eta())<studyJetMaxEta_)
+	  event_->addAK5StudyJet(jet);
+      }
+    }
+  }  
 }
 
 
@@ -1847,7 +1849,7 @@ void StoppedHSCPTreeProducer::doMuons(const edm::Event& iEvent) {
     }
   }
   else {
-    if (!muonsMissing_) edm::LogWarning("MissingProduct") << "Muons not found.  Branch will not be filled" << std::endl;
+    if (!muonsMissing_) edm::LogWarning("MissingProduct") << "Muons not found.  Branch will not be filled";
     muonsMissing_ = true;
   }
   
@@ -1877,7 +1879,7 @@ void StoppedHSCPTreeProducer::doMuons(const edm::Event& iEvent) {
     }
   }
   else {
-    if (!muonsMissing_) edm::LogWarning("MissingProduct") << "Cosmic muons not found.  Branch will not be filled" << std::endl;
+    if (!muonsMissing_) edm::LogWarning("MissingProduct") << "Cosmic muons not found.  Branch will not be filled";
     muonsMissing_ = true;
   }
 
@@ -1907,7 +1909,7 @@ void StoppedHSCPTreeProducer::doVertices(const edm::Event& iEvent) {
   }
   else {
     if (!verticesMissing_) {
-      edm::LogWarning("MissingProduct") << "Vertices not found.  Branch will not be filled" << std::endl;
+      edm::LogWarning("MissingProduct") << "Vertices not found.  Branch will not be filled";
       verticesMissing_=true;
     }
   }
@@ -1939,37 +1941,37 @@ void StoppedHSCPTreeProducer::doTracks(const edm::Event& iEvent, const edm::Even
     reco::TrackBase::TrackQuality q = reco::TrackBase::qualityByName("highPurity");
     track.quality = (trk->quality(q) ? 1 : 0);
 
-//     bool muontrackavailable = false;
-//     edm::Ref<TrackCollection> muontrack = (&*it)->globalTrack();
-//     if (muontrack.isNonnull()) { 
-//       muontrackavailable = true; 
-//     } 
-//     else {
-//       muontrack = (&*it)->innerTrack();
-//       if (muontrack.isNonnull()) { 
-// 	muontrackavailable = true; 
-//       } 
-//       else {
-// 	muontrack = (&*it)->outerTrack();
-// 	if (muontrack.isNonnull()) { 
-// 	  muontrackavailable = true; 
-// 	}
-//       }
-//     }
+    //     bool muontrackavailable = false;
+    //     edm::Ref<TrackCollection> muontrack = (&*it)->globalTrack();
+    //     if (muontrack.isNonnull()) { 
+    //       muontrackavailable = true; 
+    //     } 
+    //     else {
+    //       muontrack = (&*it)->innerTrack();
+    //       if (muontrack.isNonnull()) { 
+    // 	muontrackavailable = true; 
+    //       } 
+    //       else {
+    // 	muontrack = (&*it)->outerTrack();
+    // 	if (muontrack.isNonnull()) { 
+    // 	  muontrackavailable = true; 
+    // 	}
+    //       }
+    //     }
     
-//     if (muontrackavailable) {
+    //     if (muontrackavailable) {
 
     // This doesn't work -- causes occasional crashes.  Jeff, Jan 27.
     /*
-    TransientTrack theTransientTrack = theTTBuilder_->build(&*trk);
-    const TrajectoryStateOnSurface myTSOS = theTransientTrack.innermostMeasurementState();
-    if ( myTSOS.isValid() ) { 
+      TransientTrack theTransientTrack = theTTBuilder_->build(&*trk);
+      const TrajectoryStateOnSurface myTSOS = theTransientTrack.innermostMeasurementState();
+      if ( myTSOS.isValid() ) { 
       stateAtHCAL_= forwardPropagator_->propagate( myTSOS, *theHCALbarrel_ );
       if (stateAtHCAL_.isValid()) {
-	track.hcalEta = stateAtHCAL_.globalDirection().eta();
-	track.hcalPhi = stateAtHCAL_.globalDirection().phi();
+      track.hcalEta = stateAtHCAL_.globalDirection().eta();
+      track.hcalPhi = stateAtHCAL_.globalDirection().phi();
       } 
-    } 
+      } 
     */
     event_->addTrack(track);
   }
@@ -2148,7 +2150,7 @@ void StoppedHSCPTreeProducer::doGlobalCalo(const edm::Event& iEvent) {
     event_->leadingIPhiFractionValue=event_->leadingIPhiFraction();
   }
   else {
-    if (!towersMissing_) edm::LogWarning("MissingProduct") << "CaloTowers not found.  Branches will not be filled" << std::endl;
+    if (!towersMissing_) edm::LogWarning("MissingProduct") << "CaloTowers not found.  Branches will not be filled";
     towersMissing_ = true;
   }
   
@@ -2182,7 +2184,7 @@ void StoppedHSCPTreeProducer::doHcalNoise(const edm::Event& iEvent) {
     //event_->noiseIsolatedNoiseSumEt = summary->isolatedNoiseSumEt();
   }
   else {
-    if (!noiseSumMissing_) edm::LogWarning("MissingProduct") << "HCALNoiseSummary not found.  Branch will not be filled" << std::endl;
+    if (!noiseSumMissing_) edm::LogWarning("MissingProduct") << "HCALNoiseSummary not found.  Branch will not be filled";
     noiseSumMissing_ = true;
   }
 
@@ -2195,7 +2197,7 @@ void StoppedHSCPTreeProducer::doHcalNoise(const edm::Event& iEvent) {
     event_->noiseFilterResult = (*flag.product());
   }
   else {
-    edm::LogWarning("MissingProduct") << "No HBHE filter flag in Event" << std::endl;
+    edm::LogWarning("MissingProduct") << "No HBHE filter flag in Event";
   }
 
 
@@ -2272,7 +2274,7 @@ void StoppedHSCPTreeProducer::doHcalNoise(const edm::Event& iEvent) {
 			  event_->topHPD5ROuter);
     }
   else {
-    if (!hpdsMissing_) edm::LogWarning("MissingProduct") << "HCALNoiseRBXCollection not found.  Branch will not be filled" << std::endl;
+    if (!hpdsMissing_) edm::LogWarning("MissingProduct") << "HCALNoiseRBXCollection not found.  Branch will not be filled";
     hpdsMissing_ = true;
   }
   
@@ -2351,7 +2353,7 @@ StoppedHSCPTreeProducer::doHcalRecHits(const edm::Event& iEvent)
     }
   }
   else {
-    if (!rechitsMissing_) edm::LogWarning("MissingProduct") << "CaloRecHits not found.  Branches will not be filled" << std::endl;
+    if (!rechitsMissing_) edm::LogWarning("MissingProduct") << "CaloRecHits not found.  Branches will not be filled";
     rechitsMissing_ = true;
   }
 
@@ -2417,11 +2419,11 @@ StoppedHSCPTreeProducer::doHFRecHits(const edm::Event& iEvent)
 	 ++it) {
 
       // reject bad status rechits from collection      
-//       if (std::find(badChannels_.begin(),
-// 		    badChannels_.end(),
-// 		    it->id())!=badChannels_.end()) {
-// 	continue;
-//       }
+      //       if (std::find(badChannels_.begin(),
+      // 		    badChannels_.end(),
+      // 		    it->id())!=badChannels_.end()) {
+      // 	continue;
+      //       }
 
       GlobalPoint pos = caloGeom_->getPosition(it->detid());
       
@@ -2453,7 +2455,7 @@ StoppedHSCPTreeProducer::doHFRecHits(const edm::Event& iEvent)
 
   }
   else {
-    if (!rechitsMissing_) edm::LogWarning("MissingProduct") << "CaloRecHits not found.  Branches will not be filled" << std::endl;
+    if (!rechitsMissing_) edm::LogWarning("MissingProduct") << "CaloRecHits not found.  Branches will not be filled";
     rechitsMissing_ = true;
   }
 
@@ -2479,11 +2481,14 @@ void StoppedHSCPTreeProducer::doCscSegments(const edm::Event& iEvent, const edm:
       for (CSCSegmentCollection::const_iterator seg=segments->begin();
 	   seg!=segments->end() && i<1000;
 	   ++seg, ++i) {
+
 	
+
 	/// code taken from RecoLocalMuon/CSCValidation/src/CSCValidation.cc
-	CSCDetId id  = (CSCDetId)seg->cscDetId();
+	//	CSCDetId id  = (CSCDetId)seg->cscDetId();
 	LocalPoint localPos = seg->localPosition();
 	LocalVector segDir = seg->localDirection();
+	CSCDetId id  = seg->cscDetId();
 	GlobalPoint globalPos = cscGeom->chamber(id)->toGlobal(localPos);
 	GlobalVector globalVec = cscGeom->chamber(id)->toGlobal(segDir);
 	//float chisq    = seg->chi2();
@@ -2511,7 +2516,7 @@ void StoppedHSCPTreeProducer::doCscSegments(const edm::Event& iEvent, const edm:
       
     }
     else {
-      if (!cscSegsMissing_) edm::LogWarning("MissingProduct") << "CSC Segments not found.  Branches will not be filled" << std::endl;
+      if (!cscSegsMissing_) edm::LogWarning("MissingProduct") << "CSC Segments not found.  Branches will not be filled";
       cscSegsMissing_ = true;
     }
   }
@@ -2585,8 +2590,8 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
   }
 } // doSlices
   
-  void StoppedHSCPTreeProducer::doTimingFromDigis(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
- // this code taken from John Paul Chou's noise info producer
+void StoppedHSCPTreeProducer::doTimingFromDigis(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
+  // this code taken from John Paul Chou's noise info producer
   // RecoMET/METProducers/src/HcalNoiseInfoProducer.cc
 
   // get the conditions and channel quality
@@ -2618,8 +2623,8 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
 		    badChannels_.end(),
 		    cell)!=badChannels_.end())
 	{
-	  //std::cout <<"BAD CHANNEL FOUND IN DIGI COLLECTION!";
-	  //std::cout <<"\t("<<cell.ieta()<<","<<cell.iphi()<<","<<cell.depth()<<")"<<  std::endl;
+	  //LogDebug ("StoppedHSCPTreeProducer")  <<"BAD CHANNEL FOUND IN DIGI COLLECTION!";
+	  //LogDebug ("StoppedHSCPTreeProducer")  <<"\t("<<cell.ieta()<<","<<cell.iphi()<<","<<cell.depth()<<")"<<  std::endl;
 	  continue;
 	}
       //      DetId detcell=(DetId)cell;
@@ -2684,7 +2689,7 @@ void StoppedHSCPTreeProducer::doSlices (const edm::Event& iEvent, const edm::Eve
   }
   else {
     if (!digisMissing_) {
-      edm::LogWarning("MissingProduct") << "HBHEDigiCollection not found.  Branch will not be filled" << std::endl;
+      edm::LogWarning("MissingProduct") << "HBHEDigiCollection not found.  Branch will not be filled";
       digisMissing_ = true;
     }
   }
@@ -2712,7 +2717,7 @@ void StoppedHSCPTreeProducer::pulseShapeVariables(const std::vector<double>& sam
     if (samples.at(i) > samples.at(ipeak)) {
       ipeak = i;
     }
-      total += samples.at(i);
+    total += samples.at(i);
   }
 
   if (total==0.) return;
@@ -2746,23 +2751,21 @@ void StoppedHSCPTreeProducer::pulseShapeVariables(const std::vector<double>& sam
   }
   router = 1. - (foursample / total);
   /*
-    //  Dump diagnostic information
-  std::cout <<"--------------------"<<std::endl;
-  std::cout <<"NOISE SUMMARY OUTPUT"<<std::endl;
+  //  Dump diagnostic information
+  LogDebug ("StoppedHSCPTreeProducer")  <<"--------------------";
+  LogDebug ("StoppedHSCPTreeProducer")  <<"NOISE SUMMARY OUTPUT";
   for (uint i=0;i<samples.size();++i)
-    std::cout <<samples[i]<<"\t";
-  std::cout<<std::endl;
-  std::cout <<"total = "<<total<<"  foursample = "<<foursample<<std::endl;
-  std::cout <<"ipeak = "<<ipeak<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer")  <<samples[i]<<"\t";
+  LogDebug ("StoppedHSCPTreeProducer")  <<"total = "<<total<<"  foursample = "<<foursample;
+  LogDebug ("StoppedHSCPTreeProducer")  <<"ipeak = "<<ipeak;
   if (ipeak<(int)HBHEDataFrame::MAXSAMPLES)
-    std::cout <<"Peak value = "<<samples.at(ipeak)<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer")  <<"Peak value = "<<samples.at(ipeak);
   else
-    std::cout <<"Peak value = N/A"<<std::endl;
-  std::cout<<std::endl;
-  std::cout <<"R1 = "<<r1<<std::endl;
-  std::cout <<"R2 = "<<r2<<std::endl;
-  std::cout <<"Router = "<<router<<std::endl;
-  std::cout <<"Rpeak = "<<rpeak<<std::endl;
+  LogDebug ("StoppedHSCPTreeProducer")  <<"Peak value = N/A";
+  LogDebug ("StoppedHSCPTreeProducer")  <<"R1 = "<<r1;
+  LogDebug ("StoppedHSCPTreeProducer")  <<"R2 = "<<r2;
+  LogDebug ("StoppedHSCPTreeProducer")  <<"Router = "<<router;
+  LogDebug ("StoppedHSCPTreeProducer")  <<"Rpeak = "<<rpeak;
   */ 
 }
 

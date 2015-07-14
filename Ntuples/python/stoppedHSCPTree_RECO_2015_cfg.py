@@ -35,8 +35,6 @@ process.source= cms.Source("PoolSource",fileNames=cms.untracked.vstring(
 
 process.maxEvents.input = cms.untracked.int32(5) 
 #process.source.eventsToProcess = cms.untracked.VEventRange("247920:1:28360")  
-process.MessageLogger.cerr.FwkReport.reportEvery = 1 
-#process.MessageLogger.cerr.threshold = cms.untracked.string('INFO')
 
 # Apply lumi mask; comment out to process all events  
 import FWCore.PythonUtilities.LumiList as LumiList
@@ -46,6 +44,18 @@ process.source.lumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRang
 process.source.lumisToProcess.extend(myLumis)
 
 #process.Tracer = cms.Service('Tracer')  
+
+# To enable debug messages, compile with:
+# scram b -j 9 USER_CXXFLAGS="-DEDM_ML_DEBUG"
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.MessageLogger.cerr.threshold = 'DEBUG'
+process.MessageLogger.categories.append('StoppedHSCPTreeProducer')
+#process.MessageLogger.debugModules = cms.untracked.vstring('stoppedHSCPTree')  # uncomment to turn on debugging statements  
+process.MessageLogger.cerr.DEBUG = cms.untracked.PSet(
+    limit = cms.untracked.int32(-1)
+)
+process.MessageLogger.cerr.FwkReport.reportEvery = 1 
+
 
 
 
