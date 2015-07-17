@@ -1,6 +1,7 @@
 #include "StoppedHSCP/Analysis/interface/RunReducedHistograms.h"
 #include "StoppedHSCP/Analysis/interface/BadRuns.h"
 
+using namespace std;  
 
 RunReducedHistograms::RunReducedHistograms(TFile* outfile, 
 					   std::vector<std::string> ifiles,
@@ -21,11 +22,16 @@ RunReducedHistograms::RunReducedHistograms(TFile* outfile,
   int nruns=0;
   for (unsigned i=0;i<ifiles.size();++i)
     {
+      cout << "About to check file:  " << ifiles[i].c_str() << endl;  
       TFile *mytest=new TFile(ifiles[i].c_str(),"READ");
       // Look in subsidiary histograms to get full list of lumi sections
       // (even for events that didn't pass "REDUCED" cuts)
       TDirectory* thisdir=mytest->GetDirectory("stoppedHSCPHistograms");
       TDirectory* thissubdir=thisdir->GetDirectory("runs");
+      if (!thissubdir) { // no "runs" subdirectory found; probably means that this file contains no events
+	cout << "Skipping file with no events:  " << ifiles[i].c_str() << endl;  
+	continue;  
+      }
       TIter nextkey(thissubdir->GetListOfKeys());
       TKey *key;
       
