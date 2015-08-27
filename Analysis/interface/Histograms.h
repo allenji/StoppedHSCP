@@ -72,6 +72,8 @@ class Histograms {
   TH1D* hjetn90hits_;
   TH1D* hjetfhpd_;
   TH1D* htowiphifrac_;
+  TH1D* hjeteTrigEffNumer_;
+  TH1D* hjeteTrigEffDenom_;
   TH1D* hnmu_;
   TH2D* hmuetaphi_;
   TH1D* hntowsameiphi_;

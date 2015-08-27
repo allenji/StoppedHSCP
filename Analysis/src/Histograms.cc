@@ -70,6 +70,8 @@ void Histograms::book() {
   hjetn90_ = new TH1D("hjetn90", "Leading jet N90", 25, 0., 25.);
   hjetn90hits_ = new TH1D("hjetn90hits", "Leading jet N90 hits", 50, 0., 50.);
   hjetfhpd_ = new TH1D("hjetfhpd", "Leading jet fHPD", 50, 0., 1.);
+  hjeteTrigEffNumer_ = new TH1D("hjeteTrigEffNumer", "Leading jet energy", 50, 0., 200.); // numerator for trigger efficiency plot
+  hjeteTrigEffDenom_ = new TH1D("hjeteTrigEffDenom", "Leading jet energy", 50, 0., 200.); // denominator for trigger efficiency plot
   
   // towers in jets
   htowiphifrac_ = new TH1D("htowiphifrac", "iphi E fraction", 50, 0., 5.);
@@ -275,6 +277,24 @@ void Histograms::fill(StoppedHSCPEvent& event) {
     }
 
   }
+
+  // Make plots for trigger efficiency
+  if (cuts_->cutN(1) && 
+      cuts_->cutN(2) && 
+      cuts_->cutN(3) && 
+      cuts_->cutN(4) && 
+      cuts_->cutN(5) &&       
+      event.hltJetNoBptx3BXNoHalo &&
+      event.jet_N > 0) {  
+    hjeteTrigEffDenom_->Fill(event.jetE.at(0));  // denominator for efficiency curve
+    
+    if (event.hltJetE50NoBptx3BXNoHalo) {
+      hjeteTrigEffNumer_->Fill(event.jetE.at(0));  // numerator for efficiency curve  
+    }  
+
+  }
+
+
 
   // plot N90 and N60 right before respective cuts are made
   if (cuts_->allCutN(8)) {
@@ -526,6 +546,8 @@ void Histograms::save() {
   hjetn90hits_->Write("",TObject::kOverwrite);
   hjetfhpd_->Write("",TObject::kOverwrite);
   htowiphifrac_->Write("",TObject::kOverwrite);
+  hjeteTrigEffNumer_->Write("", TObject::kOverwrite);  
+  hjeteTrigEffDenom_->Write("", TObject::kOverwrite);  
 
   hnmu_->Write("",TObject::kOverwrite);
   hmuetaphi_->Write("",TObject::kOverwrite);
