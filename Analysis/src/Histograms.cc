@@ -216,9 +216,12 @@ void Histograms::fill(StoppedHSCPEvent& event) {
   hl1bits_->Fill("L1_SingleMuOpen", (event.gtAlgoWord0>>55)&0x1);
   hl1bits_->Fill("L1Tech_BSC_minBias_thresh1", (event.gtTechWord>>40)&0x1);
 
-  hhltbits_->Fill("HLT_JetE_NoBptx", event.hltJetNoBptx);
-  hhltbits_->Fill("HLT_JetE_NoBptx_NoHalo", event.hltJetNoBptxNoHalo);
-  hhltbits_->Fill("HLT_JetE_NoBptx3BX_NoHalo", event.hltJetNoBptx3BXNoHalo);
+  hhltbits_->Fill("Total events",              1.0);
+  hhltbits_->Fill("HLT_JetE30_NoBPTX_v",       event.hltJetNoBptx);
+  hhltbits_->Fill("HLT_JetE30_NoBPTX3BX_",     event.hltJetNoBptx3BXNoHalo);  
+  hhltbits_->Fill("HLT_JetE50_NoBPTX3BX_",     event.hltJetE50NoBptx3BXNoHalo);
+  hhltbits_->Fill("HLT_JetE70_NoBPTX3BX_",     event.hltJetE70NoBptx3BXNoHalo);
+
 
   for (unsigned bx=0; bx<5; ++bx) {
     if (event.l1JetNoBptx.at(bx)>0) hbptx_->Fill(bx-2);
