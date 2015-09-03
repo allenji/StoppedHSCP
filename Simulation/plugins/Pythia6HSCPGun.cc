@@ -357,7 +357,8 @@ void Pythia6HSCPGun::generateEvent(CLHEP::HepRandomEngine*)
   Pythia6Service::InstanceWrapper guard(fPy6Service);	// grab Py6 instance
   // 1st, primary vertex
    //
-  HepMC::GenVertex* Vtx = new HepMC::GenVertex( HepMC::FourVector(mVx, mVy, mVz));
+  //HepMC::GenVertex* Vtx = new HepMC::GenVertex( HepMC::FourVector(mVx, mVy, mVz));
+  HepMC::GenVertex* Vtx = new HepMC::GenVertex( HepMC::FourVector(0.0, 0.0, 0.0));
   // here re-create fEvt (memory)
   //
   fEvt = new HepMC::GenEvent() ;

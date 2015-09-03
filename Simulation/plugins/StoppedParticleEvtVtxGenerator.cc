@@ -1,4 +1,4 @@
-#include "StoppedParticleEvtVtxGenerator.h"
+#include "IOMC/EventVertexGenerators/interface/StoppedParticleEvtVtxGenerator.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -17,9 +17,16 @@
 //#include "./PhysicalConstants.h"
 
 // dirty trick to work around encapsulation of EventVertexGenerators package
-#include "IOMC/EventVertexGenerators/src/BaseEvtVtxGenerator.cc" 
+//#include "IOMC/EventVertexGenerators/src/BaseEvtVtxGenerator.cc" 
+
 
 #include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
+#include "FWCore/Utilities/interface/Exception.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+using namespace edm;
+using namespace std;
+using namespace CLHEP;
 
 StoppedParticleEvtVtxGenerator::StoppedParticleEvtVtxGenerator(const edm::ParameterSet & pset) 
   : BaseEvtVtxGenerator(pset),
