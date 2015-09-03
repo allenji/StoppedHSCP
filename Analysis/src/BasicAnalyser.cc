@@ -18,6 +18,7 @@
 
 namespace po = boost::program_options;
 
+using namespace std;  
 
 
 BasicAnalyser::BasicAnalyser(int argc, char* argv[]) :
@@ -89,18 +90,27 @@ BasicAnalyser::BasicAnalyser(int argc, char* argv[]) :
   // get list of input files
   DIR *dp;
   struct dirent *dirp;
-  if((dp  = opendir(indir.c_str())) == NULL) {
-    std::cout << "Error(" << errno << ") opening " << indir << std::endl;
-    std::exit(errno);
-  }
-  
-  while ((dirp = readdir(dp)) != NULL) {
-    std::string filename(dirp->d_name);
-    if (filename.find(std::string(".root")) != std::string::npos) {
-      ifiles_.push_back(indir+std::string("/")+filename);
+
+  // Handle case that multiple input directories have been specified
+  std::vector<std::string> indirs;  
+  boost::split(indirs, indir, boost::is_any_of(","));  
+
+  for (uint i=0; i<indirs.size(); i++) {  
+    cout << "Checking directory:  " << indirs.at(i) << endl;  
+    string oneIndir = indirs.at(i);  
+    if((dp  = opendir(oneIndir.c_str())) == NULL) {
+      std::cout << "Error(" << errno << ") opening " << oneIndir << std::endl;
+      std::exit(errno);
     }
+  
+    while ((dirp = readdir(dp)) != NULL) {
+      std::string filename(dirp->d_name);
+      if (filename.find(std::string(".root")) != std::string::npos) {
+	ifiles_.push_back(oneIndir+std::string("/")+filename);
+      }
+    }
+    closedir(dp);
   }
-  closedir(dp);
 
   // print some info & catch some error conditions
   std::cout << "Stopped Gluino Analysis" << std::endl;
