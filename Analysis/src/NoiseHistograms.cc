@@ -92,6 +92,7 @@ void NoiseHistograms::save() {
 
   hbx_->Write("",TObject::kOverwrite);
   hjetN_->Write("",TObject::kOverwrite);
+  hjete_->Write("",TObject::kOverwrite);
   hjeteta_->Write("",TObject::kOverwrite);
   hjetphi_->Write("",TObject::kOverwrite);
   hjetetaphi_->Write("",TObject::kOverwrite);
