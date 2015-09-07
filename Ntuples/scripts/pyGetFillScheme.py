@@ -269,7 +269,10 @@ def GetFillSchemeLocal(scheme, path):
 								elif (dobeam1 or dobeam2)==True:
 										dobeam1=False
 										dobeam2=False
+						continue
 				if (i.startswith("R")):
+						continue
+				if (i.startswith("\n")):
 						continue
 				if (dobeam1==False and dobeam2==False):
 						continue
@@ -330,8 +333,8 @@ def Main(scheme,fillschemetext=None,overwrite=False,verbose=False):
     print "TRYING TO ADD SCHEME:",scheme
 
     #newscheme=GetFillSchemeLocal(scheme,verbose=verbose)  # add ability to change websites
-		path=os.path.join(os.environ["CMSSW_BASE"],
-                                    "src/StoppedHSCP/Ntuples/data/fillingschemes_Run2")
+    path=os.path.join(os.environ["CMSSW_BASE"],
+                                    "src/StoppedHSCP/Ntuples/data/fillschemes_Run2")
     newscheme=GetFillSchemeLocal(scheme,path)  # add Run2 fill schemes
     if newscheme==None:
         print "<pyGetFillScheme::Main> ERROR!  No scheme '%s' could be found!"%scheme
