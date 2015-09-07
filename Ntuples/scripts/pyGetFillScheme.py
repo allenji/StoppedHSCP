@@ -146,7 +146,8 @@ def ParseAndCleanFillFile(fillfile):
 
 
 def GetFillScheme(scheme,
-                  websites=["http://lpc.web.cern.ch/lpc/documents/FillPatterns",
+                  websites=["https://cmswbm.web.cern.ch/cmswbm/FillPatterns",
+														"http://lpc.web.cern.ch/lpc/documents/FillPatterns",
                             "http://lpc-afs.web.cern.ch/lpc-afs/FILLSCHEMES"],
                   verbose=False):
 
@@ -237,7 +238,60 @@ def GetFillScheme(scheme,
     fillingScheme=(beam1,beam2)
     return fillingScheme
 
+def GetFillSchemeLocal(scheme, path):
+		fillingScheme=None # store beam1, beam2 ntuple
 
+		goodread=True #Check whether file can be read with valid info
+
+		schemefile=open("%s/%s.txt"%(path,scheme),'r').read()
+		if string.find(schemefile,'BEAM 1')==-1 or string.find(schemefile, 'BEAM 2')==-1:
+				goodread=False
+		if (goodread==False):
+				print "ERROR! Could no read file for scheme %s"%scheme
+				return fillingScheme
+		
+		myfile=open("%s/%s.txt"%(path,scheme),'r').readlines()
+		dobeam1=False
+		dobeam2=False
+		beam1=[]
+		beam2=[]
+		
+		for i in myfile:
+				if i.startswith("B"):
+						temp=i.split(',')
+						if (len(temp)>=1):
+								if temp[0]=="BEAM 1\n":
+										dobeam1=True
+										dobeam2=False
+								elif temp[0]=="BEAM 2\n":
+										dobeam1=False
+										dobeam2=True
+								elif (dobeam1 or dobeam2)==True:
+										dobeam1=False
+										dobeam2=False
+				if (i.startswith("R")):
+						continue
+				if (dobeam1==False and dobeam2==False):
+						continue
+				elif dobeam1==True:
+						temp=i.split(',')
+						if(len(temp)>=1):
+								try:
+										slot=string.atoi(temp[1])
+										beam1.append(slot)
+								except:
+										print "Beam1 problem"
+				elif dobeam2==True:
+						temp=i.split(',')
+						if(len(temp)>=1):
+								try:
+										slot=string.atoi(temp[1])
+										beam2.append(slot)	
+								except:
+										print "Beam2 problem"
+
+		fillingScheme=(beam1,beam2)
+		return fillingScheme
 
 def Main(scheme,fillschemetext=None,overwrite=False,verbose=False):
     '''
@@ -275,7 +329,10 @@ def Main(scheme,fillschemetext=None,overwrite=False,verbose=False):
 
     print "TRYING TO ADD SCHEME:",scheme
 
-    newscheme=GetFillScheme(scheme,verbose=verbose)  # add ability to change websites
+    #newscheme=GetFillSchemeLocal(scheme,verbose=verbose)  # add ability to change websites
+		path=os.path.join(os.environ["CMSSW_BASE"],
+                                    "src/StoppedHSCP/Ntuples/data/fillingschemes_Run2")
+    newscheme=GetFillSchemeLocal(scheme,path)  # add Run2 fill schemes
     if newscheme==None:
         print "<pyGetFillScheme::Main> ERROR!  No scheme '%s' could be found!"%scheme
         return False
@@ -292,10 +349,12 @@ def Main(scheme,fillschemetext=None,overwrite=False,verbose=False):
     for i in range(len(newscheme[0])):  # BEAM 1
         temp=temp+"%i,"%newscheme[0][i]
     inputlines.append("%s\n"%temp[:-1])  # remove trailing comma
+		#inputlines.append("Beam 1 input") # debug code add by Allen
     temp=""
     for i in range(len(newscheme[1])):  # BEAM 1
         temp=temp+"%i,"%newscheme[1][i]
     inputlines.append("%s\n"%temp[:-1])  # remove trailing comma
+		#inputlines.append("Beam 2 input") # debug code add by Allen
     inputlines.append("\n")
 
     outfile=open(fillschemetext,'w')
@@ -465,6 +524,7 @@ if __name__=="__main__":
         outfile=open(options.fillschemetext,'w')
         for i in mylines:
             outfile.write(i)
+						#outfile.write("aha") # debug code added by Allen
         outfile.close()
         print "Completed writing of schemes to '%s'"%options.fillschemetext
         CheckFillFile(options.input)
