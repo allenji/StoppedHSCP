@@ -28,7 +28,6 @@ void StoppedHSCPHistogrammer::beginJob() {
 
 
 void StoppedHSCPHistogrammer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup) {
-
   // book per-run histograms
   unsigned long run = iRun.runAuxiliary().run();
   std::vector<unsigned long>::const_iterator itr1 = find(runList_.begin(), runList_.end(), run);
@@ -62,7 +61,6 @@ void StoppedHSCPHistogrammer::beginLuminosityBlock(const edm::LuminosityBlock& i
 
 
 void StoppedHSCPHistogrammer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
-
   unsigned long run = iEvent.id().run();
   unsigned long ls  = iEvent.luminosityBlock();
 
@@ -73,24 +71,28 @@ void StoppedHSCPHistogrammer::analyze(const edm::Event& iEvent, const edm::Event
 
 
 void StoppedHSCPHistogrammer::endJob() {
-
   // save per-run histos
-  TFileDirectory dir1 = fs_->mkdir("runs");
-  dir1.cd();
-  std::vector<unsigned long>::const_iterator itr1;
-  for (itr1=runList_.begin(); itr1!=runList_.end(); ++itr1) {
-    runLSHistos_.at(*itr1)->Write();
-    runEventLSHistos_.at(*itr1)->Write();
-  }
+	if(runList_.begin()!=runList_.end()){
+  	TFileDirectory dir1 = fs_->mkdir("runs");
+  	dir1.cd();
+  	std::vector<unsigned long>::const_iterator itr1;
+  	for (itr1=runList_.begin(); itr1!=runList_.end(); ++itr1) {
+    	runLSHistos_.at(*itr1)->Write();
+    	runEventLSHistos_.at(*itr1)->Write();
+  	}	
+	}
+	else std::cout<<"No run histograms made since no events are processed!"<<std::endl;
 
   // save per-fill histos
-  TFileDirectory dir2 = fs_->mkdir("fills");
-  dir2.cd();
-  std::vector<unsigned long>::const_iterator itr2;
-  for (itr2=fillList_.begin(); itr2!=fillList_.end(); ++itr2) {
-    bxNormHistos_.at(*itr2)->Write();
-  }
-
+  if(fillList_.begin()!=fillList_.end()){
+  	TFileDirectory dir2 = fs_->mkdir("fills");
+  	dir2.cd();
+  	std::vector<unsigned long>::const_iterator itr2;
+  	for (itr2=fillList_.begin(); itr2!=fillList_.end(); ++itr2) {
+    	bxNormHistos_.at(*itr2)->Write();
+  	}
+	}
+	else std::cout<<"No fill histograms made since no events are processed!"<<std::endl;
 }
 
 
