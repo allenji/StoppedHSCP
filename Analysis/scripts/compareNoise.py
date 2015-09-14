@@ -32,7 +32,7 @@ def MakeCompareNoiseJetEnergy(inputFile,inputFile2,legend1,legend2,livetime1,liv
   #R = 0.04*W_ref
   #R = 0.15*W_ref
 
-  canvas = rt.TCanvas("c","c",50,50,W,H)
+  canvas = rt.TCanvas("cNoiseE","cNoiseE",50,50,W,H)
   canvas.SetFillColor(0)
   canvas.SetBorderMode(0)
   canvas.SetFrameFillStyle(0)
@@ -51,12 +51,11 @@ def MakeCompareNoiseJetEnergy(inputFile,inputFile2,legend1,legend2,livetime1,liv
   h2.SetLineColor(2)
   h1.Scale(1.0/float(livetime1))
   h2.Scale(1.0/float(livetime2))
-  if(h1.Integral()>h2.Integral()):
-    h1.Draw()
-    h2.Draw("same")
-  else:
-    h2.Draw()
-    h1.Draw("same")
+  h1.Draw()
+  h2.Draw("same")
+  h1.SetMinimum(0)
+  h1.SetMaximum(1.1 * max(h1.GetMaximum(), h2.GetMaximum()))  
+  h1.SetTitle(";Jet E [GeV];Rate [Hz]")  
 
   leg = rt.TLegend(0.562814,0.660622,0.878141,0.819948,"","brNDC")
   leg.SetBorderSize(0)
@@ -71,6 +70,8 @@ def MakeCompareNoiseJetEnergy(inputFile,inputFile2,legend1,legend2,livetime1,liv
   canvas.cd()
   canvas.Update()
   canvas.SaveAs(output+"/compareNoiseJetEnergy.pdf")
+  outfile.cd()  
+  canvas.Write()  
 
 def MakeCompareNoiseJetPhi(inputFile,inputFile2,legend1,legend2,livetime1,livetime2,output):
   canvas2 = rt.TCanvas("c2","c2",50,50,W,H)
@@ -250,10 +251,16 @@ if __name__=="__main__":
                     help="Specify the name of output directory.")
   (options,args)=parser.parse_args()
    
+  rt.gROOT.SetBatch()
+  rt.gStyle.SetOptStat(0)  # no stats box  
+
   command = "mkdir "+options.output
 
   os.system(command)
 
+  outfile = rt.TFile(options.output + "/" + options.output + ".root", "RECREATE")  
+
   Main(options.histogram1,options.histogram2,options.legend1,options.legend2,options.livetime1,options.livetime2,options.output)
 
+  outfile.Close()  
 
