@@ -64,6 +64,9 @@ class HaloHistograms {
   // BX-1 no jet, no n90
   TH1D* hBXm1nm2eta_;
 
+  int maxNEvtsToPrint_;
+  int NEvtsPrinted_;  
+
 };
 
 #endif

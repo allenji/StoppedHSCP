@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iostream>
 
+using namespace std; 
+
 CosmicsHistograms::CosmicsHistograms(TFile* file, Cuts* cuts) :
   cuts_(cuts),
   base_()
@@ -16,6 +18,10 @@ CosmicsHistograms::CosmicsHistograms(TFile* file, Cuts* cuts) :
   base_ = file->GetDirectory("cosmics");
 
   book();
+
+  maxNEvtsToPrint_ = 10;
+  NEvtsPrinted_    = 0;
+
 
 }
 
@@ -49,6 +55,16 @@ void CosmicsHistograms::fill(StoppedHSCPEvent& event) {
 
   // events passing halo veto but not cosmic veto
   if (!cuts_->cosmicVeto() && cuts_->haloVeto()) {
+
+    if (NEvtsPrinted_ < maxNEvtsToPrint_) {
+      cout << "Found event classified as cosmic background.  Run:lumi:event =  " 
+	   << event.run << ":" 
+	   << event.lb << ":"
+	   << event.id << endl;
+      NEvtsPrinted_++;  
+    }
+  
+
 
     hbx_->Fill(event.bx);
 
