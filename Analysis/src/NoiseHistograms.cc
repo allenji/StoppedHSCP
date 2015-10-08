@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iostream>
 
+using namespace std;
+
 NoiseHistograms::NoiseHistograms(TFile* file, Cuts* cuts) :
   cuts_(cuts),
   base_()
@@ -21,6 +23,9 @@ NoiseHistograms::NoiseHistograms(TFile* file, Cuts* cuts) :
   nm1cuts_.push_back(9); // n60
   nm1cuts_.push_back(11); // nTowIPhi
   nm1cuts_.push_back(12); // iPhiFrac
+
+  maxNEvtsToPrint_ = 10;
+  NEvtsPrinted_    = 0;
 
 }
 
@@ -55,6 +60,15 @@ void NoiseHistograms::fill(StoppedHSCPEvent& event) {
 
   // noise tagged events
   if (!event.noiseFilterResult) {
+
+    if (NEvtsPrinted_ < maxNEvtsToPrint_) {
+      cout << "Found event classified as noise background.  Run:lumi:event =  " 
+	   << event.run << ":" 
+	   << event.lb << ":"
+	   << event.id << endl;
+      NEvtsPrinted_++;  
+    }
+ 
 
     hbx_->Fill(event.bx);
     hjetN_->Fill(event.jet_N);

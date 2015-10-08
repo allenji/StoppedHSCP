@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iostream>
 
+using namespace std;
+
 HaloHistograms::HaloHistograms(TFile* file, Cuts* cuts) :
   cuts_(cuts),
   base_()
@@ -32,6 +34,10 @@ HaloHistograms::HaloHistograms(TFile* file, Cuts* cuts) :
   noHaloNoBxNoN90NoJetCuts_.push_back(2);
   noHaloNoBxNoN90NoJetCuts_.push_back(8);
   noHaloNoBxNoN90NoJetCuts_.push_back(10);
+
+  maxNEvtsToPrint_ = 10;
+  NEvtsPrinted_    = 0;
+
 
 }
 
@@ -75,6 +81,14 @@ void HaloHistograms::book() {
 void HaloHistograms::fill(StoppedHSCPEvent& event) {
 
   if (!cuts_->haloVeto()) {
+
+    if (NEvtsPrinted_ < maxNEvtsToPrint_) {
+      cout << "Found event classified as halo background.  Run:lumi:event =  " 
+	   << event.run << ":" 
+	   << event.lb << ":"
+	   << event.id << endl;
+      NEvtsPrinted_++;  
+    } 
 
     // all halo events
     hbx_->Fill(event.bx);

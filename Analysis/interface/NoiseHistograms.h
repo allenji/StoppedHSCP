@@ -49,6 +49,9 @@ class NoiseHistograms {
   TH1D* hnm1jetphi_;
   TH2D* hnm1jetetaphi_;
 
+  int maxNEvtsToPrint_;
+  int NEvtsPrinted_;  
+
 };
 
 #endif
