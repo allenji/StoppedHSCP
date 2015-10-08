@@ -41,6 +41,7 @@ class HaloHistograms {
   std::vector<unsigned> noHaloNoBxNoN90NoJetCuts_;
 
   TH1D* hbx_;
+  TH1D* hjetN_;
   TH1D* hjete_;
   TH1D* hjeteta_;
   TH1D* hjetphi_;
