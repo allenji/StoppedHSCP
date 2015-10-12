@@ -148,21 +148,22 @@ Double_t CL95(Double_t ilum, Double_t slum, Double_t eff, Double_t seff, Double_
 	TF1 like("Likelihood",Likelihood,0.,xmax,0);
 	if (plot) cout << "Likelihood function is evaluated over [0," << xmax << "] " << endl;
 	//
-	Double_t Norm = like.Integral(0.,xmax,p,epsilon);
+  like.SetParameters(p);
+	Double_t Norm = like.Integral(0.,xmax,epsilon);
 	if (plot) cout << "likelihood normalization: " << Norm << endl;
 	//
 	//	Double_t x1, x2, delta;	
 	x1 = 0;
 	x2 = xmax;
 	xmax = (x1 + x2)/2.;
-	delta = like.Integral(0,xmax,p,epsilon)/Norm - 0.95;
+	delta = like.Integral(0,xmax,epsilon)/Norm - 0.95;
 	//
 	while (fabs(delta) > epsilon) 
 	{
 		if (delta < 0) x1 = xmax;
 		else x2 = xmax;
 		xmax = (x1 + x2)/2.;
-		delta = like.Integral(0,xmax,p,epsilon)/Norm - 0.95;
+		delta = like.Integral(0,xmax,epsilon)/Norm - 0.95;
 	}         
 	
 	x[0] = like.GetMaximumX(0.,MaxSig);
@@ -200,12 +201,14 @@ Double_t Likelihood(Double_t *x, Double_t *p)
 			if (I == 0)
 			{
 				Double_t low = A0 > 5.*sA ? A0 - 5.*sA : 0.;
-				retval = in->Integral(low,A0+5.*sA,par,epsilon);
+        in->SetParameters(par);
+				retval = in->Integral(low,A0+5.*sA,epsilon);
 			} else {
 				Double_t low = 0., high = A0 + 5.*sA, tmp = 1.;
 				while (tmp > epsilon)
 				{	 
-					tmp = in->Integral(low,high,par,epsilon);
+          in->SetParameters(par);
+					tmp = in->Integral(low,high,epsilon);
 					retval += tmp;
 					low = high;
 					high *= 2;
@@ -221,12 +224,14 @@ Double_t Likelihood(Double_t *x, Double_t *p)
 		if (I == 0)
 		{
 			Double_t low = B0 > 5.*sB ? B0 - 5.*sB : 0.;
-			retval = out->Integral(low,B0+5.*sB,x,epsilon);
+      out->SetParameters(x);
+			retval = out->Integral(low,B0+5.*sB,epsilon);
 		} else {
 			Double_t low = 0., high = B0 + 5.*sB, tmp = 1.;
 			while (tmp > epsilon)
 			{	 
-				tmp = out->Integral(low,high,x,epsilon);
+        out->SetParameters(x);
+				tmp = out->Integral(low,high,epsilon);
 				retval += tmp;
 				low = high;
 				high *= 2;
@@ -257,9 +262,19 @@ Double_t Outer(Double_t *x, Double_t *p)
 		par[0]=x[0];  // background value
 		par[1]=p[0];  // signal cross section value
 		Double_t low = A0 > 5.*sA ? A0 - 5.*sA : 0.;
-		if (I == 0) retval = TMath::Gaus(x[0],B0,sB,kTRUE)*in->Integral(low,A0+5.*sA,par,epsilon);
-		else if (I == 1) retval = TMath::LogNormal(x[0], sigma_b, 0., B0)*in->Integral(0.,A0+5.*sA,par,epsilon);
-		else if (I == 2) retval = TMath::GammaDist(x[0], sigma_b, 0., 1./tau_b)*in->Integral(0.,A0+5.*sA,par,epsilon);
+		if (I == 0) {
+      in->SetParameters(par);
+      retval = TMath::Gaus(x[0],B0,sB,kTRUE)*in->Integral(low,A0+5.*sA,epsilon);
+    }
+
+		else if (I == 1) {
+       in->SetParameters(par);
+       retval = TMath::LogNormal(x[0], sigma_b, 0., B0)*in->Integral(0.,A0+5.*sA,epsilon);
+    }
+		else if (I == 2) {
+      in->SetParameters(par);
+      retval = TMath::GammaDist(x[0], sigma_b, 0., 1./tau_b)*in->Integral(0.,A0+5.*sA,epsilon);
+    }
 		else return 0;
 		delete in;
 	}
