@@ -4,6 +4,7 @@
 
 #include "StoppedHSCP/ToyMC/interface/jsonxx.h"
 
+#include <iostream>
 #include <vector>
 #include "TCanvas.h"
 #include "TFile.h"
@@ -99,7 +100,7 @@ class Luminosity {
   void makePlots() const;
 
   // print out
-  void dump(ostream& o, bool full);
+  void dump(std::ostream& o, bool full);
 
  private:
 

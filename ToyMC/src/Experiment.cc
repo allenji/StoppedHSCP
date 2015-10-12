@@ -145,7 +145,7 @@ Experiment::~Experiment() {
 }
 
 
-void Experiment::summary(ostream& o) {
+void Experiment::summary(std::ostream& o) {
 
   o << lifetime << "\t";
   o << effLumi   << "\t";

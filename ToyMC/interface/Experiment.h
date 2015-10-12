@@ -12,7 +12,7 @@ public:
   Experiment(std::string file="");
   ~Experiment();
 
-  void summary (ostream& o);
+  void summary (std::ostream& o);
 
   // particle parameters
   double mass;

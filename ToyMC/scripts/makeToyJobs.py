@@ -44,6 +44,9 @@ paramfile = ddir+'/parameters.txt'
 if len(args)>1:
     paramfile = args[1]
 
+
+print ddir
+print odir
 # create output directory
 if not os.path.exists(odir):
     os.makedirs(odir)
@@ -58,9 +61,9 @@ file.close()
 try:
     file = open(ddir+'/lifetimes.txt')
 except IOError:
-    file = open(ddir+"searchLifetimes.txt")
+    file = open(ddir+"/searchLifetimes.txt") #editted by Allen
 else:
-    file = open(ddir+"searchLifetimes.txt")
+    file = open(ddir+"/searchLifetimes.txt")
     
 for line in file:
     if (float(line)>7.5e-8):

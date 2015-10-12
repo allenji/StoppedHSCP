@@ -554,7 +554,7 @@ void Luminosity::buildFromModel(unsigned int cycles,
 }
 
 
-void Luminosity::dump(ostream& o, bool full) {
+void Luminosity::dump(std::ostream& o, bool full) {
 
   if (full) {
     for (unsigned i=0; i<lumis_.size(); ++i) {
