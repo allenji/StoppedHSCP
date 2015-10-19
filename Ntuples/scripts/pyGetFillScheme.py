@@ -3,16 +3,11 @@
 
 '''
 pyGetFillScheme.py
-
 v1.0
-
 Jeff Temple
-
-
 pythonized-version of getFillScheme.sh script.  This version allows users simply to provide input file "fills.txt",
 and only the filling schemes in that file that have not already been defined (in "fillingSchemes.txt") will be added.
 Users can also specify list of schemes on command line, and change input/output from default fills.txt and fillingSchemes.txt files
-
 If website for a given fill scheme does not exist, it may be that the name in fills.txt is incorrect.  Check against scheme names in /afs/cern.ch/user/l/lpc/2011/stablebeams2011, which should be correct.
 '''
 
@@ -147,7 +142,7 @@ def ParseAndCleanFillFile(fillfile):
 
 def GetFillScheme(scheme,
                   websites=["https://cmswbm.web.cern.ch/cmswbm/FillPatterns",
-														"http://lpc.web.cern.ch/lpc/documents/FillPatterns",
+                            "http://lpc.web.cern.ch/lpc/documents/FillPatterns",
                             "http://lpc-afs.web.cern.ch/lpc-afs/FILLSCHEMES"],
                   verbose=False):
 
@@ -239,62 +234,71 @@ def GetFillScheme(scheme,
     return fillingScheme
 
 def GetFillSchemeLocal(scheme, path):
-		fillingScheme=None # store beam1, beam2 ntuple
+    fillingScheme=None # store beam1, beam2 ntuple
 
-		goodread=True #Check whether file can be read with valid info
+    goodread=True #Check whether file can be read with valid info
+    try:
+        schemefile=open("%s/%s.txt"%(path,scheme),'r').read()
+    except IOError:
+        schemefile=open("%s/%s.csv"%(path,scheme),'r').read()
+    if string.find(schemefile,'BEAM 1')==-1 or string.find(schemefile, 'BEAM 2')==-1:
+        goodread=False
+    if (goodread==False):
+        print "ERROR! Could no read file for scheme %s"%scheme
+        return fillingScheme
+    
+    try:
+        myfile=open("%s/%s.txt"%(path,scheme),'r').readlines()
+    except IOError:
+        myfile=open("%s/%s.csv"%(path,scheme),'r').readlines()
+    dobeam1=False
+    dobeam2=False
+    beam1=[]
+    beam2=[]
+    
+    for i in myfile:
+        if i.startswith("B"):
+            temp=i.split(',')
+            if (len(temp)>=1):
+                if str(temp[0]).startswith("BEAM 1"):
+                    dobeam1=True
+                    dobeam2=False
+                elif str(temp[0]).startswith("BEAM 2"):
+                    dobeam1=False
+                    dobeam2=True
+                elif (dobeam1 or dobeam2)==True:
+                    dobeam1=False
+                    dobeam2=False
+            continue
+        if (i.startswith("R")):
+            continue
+        if (i.startswith("\n")):
+            continue
+        if (i.startswith("\r\n")):  #for files from Windows
+            continue
+        if (dobeam1==False and dobeam2==False):
+            continue
+        elif dobeam1==True:
+            temp=i.split(',')
+            if(len(temp)>=1):
+                try:
+                    slot=string.atoi(temp[1])
+                    beam1.append(slot)
+                except:
+                    print repr(i)
+                    print "Beam1 problem"
+        elif dobeam2==True:
+            temp=i.split(',')
+            if(len(temp)>=1):
+                try:
+                    slot=string.atoi(temp[1])
+                    beam2.append(slot)  
+                except:
+                    print repr(i)
+                    print "Beam2 problem"
 
-		schemefile=open("%s/%s.txt"%(path,scheme),'r').read()
-		if string.find(schemefile,'BEAM 1')==-1 or string.find(schemefile, 'BEAM 2')==-1:
-				goodread=False
-		if (goodread==False):
-				print "ERROR! Could no read file for scheme %s"%scheme
-				return fillingScheme
-		
-		myfile=open("%s/%s.txt"%(path,scheme),'r').readlines()
-		dobeam1=False
-		dobeam2=False
-		beam1=[]
-		beam2=[]
-		
-		for i in myfile:
-				if i.startswith("B"):
-						temp=i.split(',')
-						if (len(temp)>=1):
-								if temp[0]=="BEAM 1\n":
-										dobeam1=True
-										dobeam2=False
-								elif temp[0]=="BEAM 2\n":
-										dobeam1=False
-										dobeam2=True
-								elif (dobeam1 or dobeam2)==True:
-										dobeam1=False
-										dobeam2=False
-						continue
-				if (i.startswith("R")):
-						continue
-				if (i.startswith("\n")):
-						continue
-				if (dobeam1==False and dobeam2==False):
-						continue
-				elif dobeam1==True:
-						temp=i.split(',')
-						if(len(temp)>=1):
-								try:
-										slot=string.atoi(temp[1])
-										beam1.append(slot)
-								except:
-										print "Beam1 problem"
-				elif dobeam2==True:
-						temp=i.split(',')
-						if(len(temp)>=1):
-								try:
-										slot=string.atoi(temp[1])
-										beam2.append(slot)	
-								except:
-										print "Beam2 problem"
-
-		fillingScheme=(beam1,beam2)
-		return fillingScheme
+    fillingScheme=(beam1,beam2)
+    return fillingScheme
 
 def Main(scheme,fillschemetext=None,overwrite=False,verbose=False):
     '''
@@ -352,12 +356,12 @@ def Main(scheme,fillschemetext=None,overwrite=False,verbose=False):
     for i in range(len(newscheme[0])):  # BEAM 1
         temp=temp+"%i,"%newscheme[0][i]
     inputlines.append("%s\n"%temp[:-1])  # remove trailing comma
-		#inputlines.append("Beam 1 input") # debug code add by Allen
+    #inputlines.append("Beam 1 input") # debug code add by Allen
     temp=""
     for i in range(len(newscheme[1])):  # BEAM 1
         temp=temp+"%i,"%newscheme[1][i]
     inputlines.append("%s\n"%temp[:-1])  # remove trailing comma
-		#inputlines.append("Beam 2 input") # debug code add by Allen
+    #inputlines.append("Beam 2 input") # debug code add by Allen
     inputlines.append("\n")
 
     outfile=open(fillschemetext,'w')
@@ -527,7 +531,7 @@ if __name__=="__main__":
         outfile=open(options.fillschemetext,'w')
         for i in mylines:
             outfile.write(i)
-						#outfile.write("aha") # debug code added by Allen
+            #outfile.write("aha") # debug code added by Allen
         outfile.close()
         print "Completed writing of schemes to '%s'"%options.fillschemetext
         CheckFillFile(options.input)
