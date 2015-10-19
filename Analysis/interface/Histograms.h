@@ -60,6 +60,7 @@ class Histograms {
   TH1D* hhlte_;
   TH1D* hhlteta_;
   TH1D* hhltphi_;
+  TH1D* hjetN_;
   TH1D* hjete_;
   TH1D* hjeteta_;
   TH1D* hjetphi_;
