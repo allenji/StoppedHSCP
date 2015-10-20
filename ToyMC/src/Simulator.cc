@@ -288,7 +288,7 @@ void Simulator::calculateExpectedBG(unsigned firstFill, unsigned lastFill) {
     //    if (lumi_.at(lsi).lumi < Luminosity::THRESHOLD) continue;    
 
     // ignore lumi-sections where cms not sensitive
-    if (!lumi_.cmsSensitive(lsi)) continue;
+    if (lumi_.cmsSensitive(lsi)!=1) continue;
 
     // update number of masked BX if run changed
     if (lumi_.at(lsi).run != run) {
