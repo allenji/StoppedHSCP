@@ -490,6 +490,7 @@ void Luminosity::buildFromFile2(std::string filename,
 	      LumiBlock tmp;
 	      tmp.run = last.run;
 	      tmp.ls  = last.ls+i;
+        tmp.good = false;
 	      lumis_.push_back(tmp);
 	    }
 	  }
