@@ -267,6 +267,9 @@ void Histograms::fill(StoppedHSCPEvent& event) {
       hjetfhpd_->Fill(0.);
       htowiphifrac_->Fill(event.leadingIPhiFraction());
     }
+    if (event.jet_N > 1) {
+      hsubljete_->Fill(event.jetE.at(0));
+    }
 
     hnmu_->Fill(event.mu_N);
     if (event.mu_N>0) {
