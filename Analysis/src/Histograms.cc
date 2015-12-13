@@ -59,7 +59,8 @@ void Histograms::book() {
   htowietaiphi_ = new TH2D("htowietaiphi", "Leading tower position", 100, -50., 50., 75, 0., 75.);
   
   // jets
-  hjete_ = new TH1D("hjete", "Leading jet energy", 50, 0., 200.);
+  hjete_ = new TH1D("hjete", "Leading jet energy", 45, 0., 900.);
+  hsubljete_ = new TH1D("hsubljete", "Subleading jet energy", 50, 0., 500.);
   hjeteta_ = new TH1D("hjeteta", "Leading jet #eta", 70, -3.5, 3.5);
   hjetphi_ = new TH1D("hjetphi", "Leading jet #phi", 72, -1 * TMath::Pi(),  TMath::Pi());
   hjetetaphi_ = new TH2D("hjetetaphi", "Leading jet pos", 70, -3.5, 3.5, 72, -1 * TMath::Pi(),  TMath::Pi());
@@ -535,6 +536,7 @@ void Histograms::save() {
   hntowsameiphi_->Write("",TObject::kOverwrite);
   htowietaiphi_->Write("",TObject::kOverwrite);
   hjete_->Write("",TObject::kOverwrite);
+  hsubljete_->Write("",TObject::kOverwrite);
   hjeteta_->Write("",TObject::kOverwrite);
   hjetphi_->Write("",TObject::kOverwrite);
   hjetetaphi_->Write("",TObject::kOverwrite);

@@ -37,6 +37,7 @@ class CosmicsHistograms {
   TH1D* hbx_;
   TH1D* hjetN_;
   TH1D* hjete_;
+  TH1D* hsubljete_;
   TH1D* hjeteta_;
   TH1D* hjetphi_;
   TH2D* hjetetaphi_;

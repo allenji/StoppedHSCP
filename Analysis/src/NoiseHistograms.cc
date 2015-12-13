@@ -42,7 +42,8 @@ void NoiseHistograms::book() {
   // time
   hbx_ = new TH1D("hnoisebx", "BX number", 3564, 0., 3564.);
   hjetN_ = new TH1D("hjetN", "Number of jets", 10, 0., 10.);
-  hjete_ = new TH1D("hnoisejete", "Jet E", 50, 0., 100.);
+  hjete_ = new TH1D("hnoisejete", "Jet E", 18, 0., 900.);
+  hsubljete_ = new TH1D("hnoisesubljete", "Subleading jet E", 50, 0., 500.);
   hjeteta_ = new TH1D("hnoisejeteta", "Leading jet #eta", 70, -3.5, 3.5);
   hjetphi_ = new TH1D("hnoisejetphi", "Leading jet #phi", 72, -1 * TMath::Pi(),  TMath::Pi());
   hjetetaphi_ = new TH2D("hnoisejetetaphi", "Leading jet pos", 70, -3.5, 3.5, 72, -1 * TMath::Pi(),  TMath::Pi());
@@ -79,6 +80,9 @@ void NoiseHistograms::fill(StoppedHSCPEvent& event) {
       hjetphi_->Fill(event.jetPhi[0]);
       hjetetaphi_->Fill(event.jetEta[0], event.jetPhi[0]);
     }
+    if (event.jet_N > 1) {
+      hsubljete_->Fill(event.jetE[1]);
+    }
 
   }
 
@@ -107,6 +111,7 @@ void NoiseHistograms::save() {
   hbx_->Write("",TObject::kOverwrite);
   hjetN_->Write("",TObject::kOverwrite);
   hjete_->Write("",TObject::kOverwrite);
+  hsubljete_->Write("",TObject::kOverwrite);
   hjeteta_->Write("",TObject::kOverwrite);
   hjetphi_->Write("",TObject::kOverwrite);
   hjetetaphi_->Write("",TObject::kOverwrite);
