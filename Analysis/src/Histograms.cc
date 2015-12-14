@@ -59,6 +59,7 @@ void Histograms::book() {
   htowietaiphi_ = new TH2D("htowietaiphi", "Leading tower position", 100, -50., 50., 75, 0., 75.);
   
   // jets
+  hjetN_ = new TH1D("hjetN","jet number", 5, 0., 5.);
   hjete_ = new TH1D("hjete", "Leading jet energy", 45, 0., 900.);
   hsubljete_ = new TH1D("hsubljete", "Subleading jet energy", 50, 0., 500.);
   hjeteta_ = new TH1D("hjeteta", "Leading jet #eta", 70, -3.5, 3.5);
@@ -240,7 +241,8 @@ void Histograms::fill(StoppedHSCPEvent& event) {
   hhalo_->Fill(halo.c_str(), 1.);
 
   // fill remaining histograms for events passing BX veto etc.
-  if (cuts_->allCutN(5)) {
+  //if (cuts_->allCutN(5)) {
+  if(1) {
 
     if (event.l1Jet_N > 0) {
       hl1et_->Fill(event.l1JetE.at(0));
@@ -253,6 +255,7 @@ void Histograms::fill(StoppedHSCPEvent& event) {
       hhlteta_->Fill(event.hltJetEta.at(0));
       hhltphi_->Fill(event.hltJetPhi.at(0));
     }
+    hjetN_->Fill(event.jet_N);
     if (event.jet_N > 0) {
       hjete_->Fill(event.jetE.at(0));
       hjeteta_->Fill(event.jetEta.at(0));
@@ -538,6 +541,7 @@ void Histograms::save() {
   hhltphi_->Write("",TObject::kOverwrite);
   hntowsameiphi_->Write("",TObject::kOverwrite);
   htowietaiphi_->Write("",TObject::kOverwrite);
+  hjetN_->Write("",TObject::kOverwrite);
   hjete_->Write("",TObject::kOverwrite);
   hsubljete_->Write("",TObject::kOverwrite);
   hjeteta_->Write("",TObject::kOverwrite);
