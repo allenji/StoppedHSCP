@@ -330,13 +330,13 @@ bool Cuts::cosmicVeto3() const {  // cosmic veto from 2011 analysis
 
 bool Cuts::hcalNoiseVeto() const {
   // veto events where the leading jet is contained in HPDs 52-55
-  bool pass = true;
+  /*bool pass = true;
   if (event_->hpd_N > 0) {
     for (unsigned i = 0; i<event_->hpd_N; i++) {
       if (event_->hpdId[i]==52 || event_->hpdId[i]==53 || event_->hpdId[i]==54 || event_->hpdId[i]==55) pass = false;
     }
-  }
-  return (event_->noiseFilterResult && pass);
+  }*/
+  return (event_->noiseFilterResult /*&& pass*/);
 }
 
 bool Cuts::looseJetCut() const {     // low Et threshold
