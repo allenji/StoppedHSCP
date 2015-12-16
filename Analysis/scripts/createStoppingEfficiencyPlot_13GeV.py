@@ -24,14 +24,14 @@ gluinoyErr2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
 gluinoy2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
 
 stopx2012 = array('d',
-              [300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1000.0])
+              [200.0, 400.0, 600.0, 800.0, 1000.0, 1200.0, 1400.0, 1600.0, 1800.0, 2000.0, 2200.0, 2400.0, 2600.0])
 stopyNum2012 = array('d',
-                 [3213.,2861.,2687.,2518.,2449.,2259.,2242.,2189.])
+                 [5494.,4797.,4449.,4215.,4205.,4076.,3993.,4156.,4097.,3896.,4045.,4088.,3745.])
 stopyDen2012 = array('d',
-                 [50000., 50000., 50000.,50000.,50000.,50000.,50000.,50000.,])
-stopy2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.])
-stopxErr2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.])
-stopyErr2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.])
+                 [95902.,96352.,99608.,100000.,100000.,100000.,100000.,99690.,99543.,100000.,98752.,99096.,100000.,98476.])
+stopy2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+stopxErr2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+stopyErr2012 = array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
 
 for i in xrange(0, len(gluinox2012)):
     gluinoy2012[i] = gluinoyNum2012[i]/gluinoyDen2012[i]
@@ -65,7 +65,7 @@ c1.SetGrid()
 
 mg = TMultiGraph()
 mg.Add(geff_gluino2012)
-#mg.Add(geff_stop2012)
+mg.Add(geff_stop2012)
 mg.SetMaximum(0.2)
 mg.SetMinimum(0.0)
 mg.SetTitle(';m [GeV];#varepsilon_{stopping}')
@@ -77,7 +77,7 @@ mg.GetXaxis().SetLimits(200,2600)
 leg = TLegend(0.50, 0.65 ,0.89, 0.89)
 leg.SetTextFont(42)
 leg.AddEntry(geff_gluino2012, '2015,stopped gluinos, #tilde{g} #tilde{g}', 'l')
-#leg.AddEntry(geff_stop2012, 'stopped stops, #tilde{t} #tilde{t}', 'l')
+leg.AddEntry(geff_stop2012, '2015,stopped stops, #tilde{t} #tilde{t}', 'l')
 leg.SetHeader("CMS Simulation #sqrt{s} = 13 TeV")
 leg.SetFillColor(kWhite)
 leg.SetBorderSize(0)
@@ -85,7 +85,7 @@ leg.Draw()
 
 output.Write()
 geff_gluino2012.Write()
-#geff_stop2012.Write()
+geff_stop2012.Write()
 mg.Write()
 c1.RedrawAxis()
 
