@@ -72,12 +72,14 @@ public:
 void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
 
   ExtraLimitPlots plots(lumi);
-  plots.calculateCrossSections(7,4,3,39,9);
+  plots.calculateCrossSections(4,6,3,39,9);
 
   // xsecs as extracted from nllfast http://web.physik.rwth-aachen.de/service/wiki/bin/view/Main/SquarksandGluinos
   // gluino (m_squark=m_gluino):  "nllfast gg mstw <mass> <mass>"
   // gluino (m_squark>>m_gluino): "nllfast gdcpl mstw <mass>"
   // stop: "nllfast st mstw <mass>"
+  // the xsec of gluino and stop are updated for 13TeV analysis, the xsecs are extracted from:
+  // https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections#Cross_sections_for_various_S_AN2
   double g_mass [21] = {  
     200 ,     250 ,     300 ,     350 ,     400 ,   
     450 ,     500 ,     550 ,     600 ,     650 ,   
@@ -85,18 +87,18 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
     950 ,    1000 ,    1050 ,    1100 ,    1150 ,   
     1200 };
   double g_xsec [21] = {  
-    1010,      302,     106,     42.6,     18.9,
-    8.93,     4.52,    2.39,     1.31,    0.744,
-    0.434,   0.259,   0.157,   0.0967,   0.0603,
-    0.0381, 0.0244,  0.0157,   0.0102,  0.00667,
-    0.00440
+    3574,      1190,     462,     202,     98.0,
+    50.4,      27.4,    15.6,     9.20,    5.60,
+    3.53,      2.27,     1.49,   0.996,   0.677,
+    0.466,     0.325,  0.229,   0.163,  0.118,
+    0.0856
   };
   double g_xsecdcpl [21] = {  
-    1010,      302,     106,     42.6,     18.9,
-    8.93,     4.52,    2.39,     1.31,    0.744,
-    0.434,   0.259,   0.157,   0.0967,   0.0603,
-    0.0381, 0.0244,  0.0157,   0.0102,  0.00667,
-    0.00440
+    3574,      1190,     462,     202,     98.0,
+    50.4,      27.4,    15.6,     9.20,    5.60,
+    3.53,      2.27,     1.49,   0.996,   0.677,
+    0.466,     0.325,  0.229,   0.163,  0.118,
+    0.0856
   };
   double s_mass [21] = {  
     100 ,     150 ,     200 ,     250 ,     300 ,   
@@ -105,11 +107,11 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
     850 ,     900 ,     950 ,    1000 ,    1050 ,   
     1100 };
   double s_xsec [21] = {  
-    560,       80.3,     18.5,     5.58,     2.00,
-    0.807,    0.357,    0.170,   0.0856,   0.0452,
-    0.0248,  0.0140,  0.00811,  0.00480,  0.00290,
-    0.00177,0.00110, 0.000687, 0.000435, 0.000278,
-    0.000180
+    1521,       249.4,     64.5,     21.6,     8.51,
+    3.79,        1.84,    0.948,   0.518,   0.296,
+    0.175,      0.107,  0.067,  0.0431,  0.0283,
+    0.0190,    0.0129, 0.00883, 0.00615, 0.00432,
+    0.00307
   };
 
   //gluino xsec
@@ -155,13 +157,13 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
   TCanvas *canvas = new TCanvas("allMassLifetime", "allMassLifetime", 800, 600);
   
   canvas->SetLogx();
-  canvas->SetGridy();
+//  canvas->SetGridy();
 
   
   TH1F* h = new TH1F ("h", "", 1,  7.5e-8, 1e6);
   h->SetStats (0);
   h->SetMinimum (300);
-  h->SetMaximum (1500);
+  h->SetMaximum (2000);
   h->SetTitle("Beamgap Expt");
   //  h->GetXaxis()->SetTitle("#tau_{#tilde{g},#tilde{t},#tilde{#tau}} [s]");
   h->GetXaxis()->SetTitle("#tau [s]");
@@ -178,7 +180,7 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
       TArrow* arrow = new TArrow (x[i], y, h->GetXaxis()->GetXmin(), y, 0.02);
       arrow->SetLineColor (kRed);
       arrow->SetLineWidth (2);
-      arrow->Draw();
+      //arrow->Draw();
       cout << "GLUINO mass limit @ " << x[i] << "sec is found: " << y << endl;
       break;
     }
@@ -190,7 +192,7 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
       TArrow* arrow = new TArrow (x[i], y, h->GetXaxis()->GetXmin(), y, 0.02);
       arrow->SetLineColor (kBlue);
       arrow->SetLineWidth (2);
-      arrow->Draw();
+      //arrow->Draw();
       cout << "STOP mass limit @ " << x[i] << "sec is found: " << y << endl;
       break;
     }
@@ -285,9 +287,9 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
   
 
   TPaveText* blurb = new TPaveText(0.20, 0.63, 0.60, 0.90, "NDC");
-  blurb->AddText("CMS Preliminary 2012");
+  blurb->AddText("CMS Preliminary 2015");
   //blurb->AddText("CMS 2012");
-  blurb->AddText("#int L dt = 18.6 fb^{-1}"); //,  #int L_{eff} dt = 935 pb^{-1}");
+  blurb->AddText("#int L dt = 2.46 fb^{-1}"); //,  #int L_{eff} dt = 935 pb^{-1}");
   //blurb->AddText("L^{max}_{inst} = 3.5 #times 10^{33} cm^{-2}s^{-1}");
 
   // std::stringstream label;
@@ -302,8 +304,9 @@ void gluinostopMassLifetime(double lumi=4560., double maxInstLumi=5000.) {
   // std::stringstream label2;
   // label2<<"L^{max}_{inst} = "<<peakInstLumi<<" x 10^{"<<exponent<<"} cm^{-2}s^{-1}";
 //  blurb->AddText(label2.str().c_str());
-  blurb->AddText("#sqrt{s} = 8 TeV");
-  blurb->AddText("E_{gluon} > 120 GeV, E_{top} > 150 GeV");
+  blurb->AddText("#sqrt{s} = 13 TeV");
+  blurb->AddText("E_{g} > 120 GeV, E_{t} > 150 GeV");
+  blurb->AddText("E_{jet} > 70 GeV");
   blurb->SetTextFont(42);
   blurb->SetBorderSize(0);
   blurb->SetFillColor(0);

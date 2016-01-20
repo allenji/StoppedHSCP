@@ -66,7 +66,7 @@ ExtraAxis anotherScale (const TH1* refHist, double scale, int color, const char*
 void allInOneLifetime(double lumi=4560., double maxInstLumi=5000.) {
 
   ExtraLimitPlots plots(lumi);
-  plots.calculateCrossSections(7,4,3,39,9);
+  plots.calculateCrossSections(4,6,3,39,9);
   
   // graphs - observed
   TGraph* g_obs      = plots.getObsLimit();
@@ -105,7 +105,7 @@ void allInOneLifetime(double lumi=4560., double maxInstLumi=5000.) {
   h->SetTitle("Beamgap Expt");
   //  h->GetXaxis()->SetTitle("#tau_{#tilde{g},#tilde{t},#tilde{#tau}} [s]");
   h->GetXaxis()->SetTitle("#tau [s]");
-  h->GetYaxis()->SetTitle("#sigma #times BF #times #varepsilon_{stop} #times #varepsilon_{det}   [pb]  ");
+  h->GetYaxis()->SetTitle("#sigma #times BF #times #varepsilon_{stopping} #times #varepsilon_{reco}   [pb]  ");
   h->Draw ("Y+");
 
   ExtraAxis aGluino = anotherScale (h, gluino2ref, kRed+2, "#sigma(pp #rightarrow #tilde{g}#tilde{g}) #times BF(#tilde{g} #rightarrow g#tilde{#chi}^{0})   [pb]  ", 0.0);
@@ -119,7 +119,7 @@ void allInOneLifetime(double lumi=4560., double maxInstLumi=5000.) {
   
   TPaveText* blurb = new TPaveText(0.25, 0.57, 0.50, 0.87, "NDC");
 
-  blurb->AddText("CMS Preliminary 2012");
+  blurb->AddText("CMS Preliminary 2015");
   // std::stringstream label;
   // label<<"#int L dt = "<<lumi<<" pb^{-1}";
   // blurb->AddText(label.str().c_str());
@@ -134,10 +134,11 @@ void allInOneLifetime(double lumi=4560., double maxInstLumi=5000.) {
   // blurb->AddText(label2.str().c_str());
 
   //blurb->AddText("CMS 2011");
-  blurb->AddText("#int L dt = 18.6 fb^{-1}");//,  #int L_{eff} dt = 935 pb^{-1}");
+  blurb->AddText("#int L dt = 2.46 fb^{-1}");//,  #int L_{eff} dt = 935 pb^{-1}");
   //blurb->AddText("L^{max}_{inst} = 3.5 #times 10^{33} cm^{-2}s^{-1}");
-  blurb->AddText("#sqrt{s} = 8 TeV");
-  blurb->AddText("E_{gluon} > 120 GeV, E_{top} > 150 GeV");
+  blurb->AddText("#sqrt{s} = 13 TeV");
+  blurb->AddText("E_{g} > 120 GeV, E_{t} > 150 GeV");
+  blurb->AddText("E_{jet} > 70 GeV");
   //blurb->AddText("m_{#tilde{g}} = 300 GeV/c^{2}");
   //blurb->AddText("m_{#tilde{#chi}^{0}} = 200 GeV/c^{2}");
   blurb->SetTextFont(42);
@@ -183,26 +184,26 @@ void allInOneLifetime(double lumi=4560., double maxInstLumi=5000.) {
   }
   
   TLine *l;
-  l = new TLine(7.5e-8, 1.3/gluino2ref, 1e6, 1.3/gluino2ref); //600 GeV
+  l = new TLine(7.5e-8, 1.49/gluino2ref, 1e6, 1.49/gluino2ref); //600 GeV
   l->SetLineColor(kRed);
   l->SetLineWidth(2);
   l->Draw();
   
   TLatex *t1;
-  t1 = new TLatex(0.1, 0.6/gluino2ref, "#sigma_{theory} (m_{#tilde{g}} = 600 GeV)");
+  t1 = new TLatex(0.1, 0.7/gluino2ref, "#sigma_{theory} (m_{#tilde{g}} = 800 GeV)");
   t1->SetTextColor(kRed);
   t1->SetTextFont(42);
   t1->SetTextSize(0.035);
   t1->Draw();
 
   // STOP LIMIT
-  TLine *ltop = new TLine(7.5e-8, 0.025/stop2ref, 1e6, 0.025/stop2ref); //600 GeV
+  TLine *ltop = new TLine(7.5e-8, 0.028/stop2ref, 1e6, 0.028/stop2ref); //600 GeV
   ltop->SetLineColor(kBlue);
   ltop->SetLineWidth(2);
   ltop->Draw();
   
   TLatex *t1top;
-  t1top = new TLatex(0.1, 0.01/stop2ref, "#sigma_{theory} (m_{#tilde{t}} = 600 GeV)");
+  t1top = new TLatex(0.1, 0.015/stop2ref, "#sigma_{theory} (m_{#tilde{t}} = 800 GeV)");
   t1top->SetTextColor(kBlue);
   t1top->SetTextFont(42);
   t1top->SetTextSize(0.035);
