@@ -127,6 +127,8 @@ void RunHistograms::summarise() {
   TH1D* hnhlt       = new TH1D("hrunevt", "HLT counts", nruns, 0., 0.);
   TH1D* hlivetime   = new TH1D("hruntime", "Live time", nruns, 0., 0.);
   TH1D* hnlb        = new TH1D("hrunlb", "N lumi blocks", nruns, 0., 0.);
+  TH1D* hhltrate    = new TH1D("hhltrate", "HLT rate", nruns, 0., 0.);
+  TH1D* hhltrate_2  = new TH1D("hhltrate_fancy", "HLT rate", 4500, 256500.0, 261000.0);
 
   // fill them
   for (std::vector<unsigned long>::const_iterator itr=runs_.begin();
@@ -152,6 +154,8 @@ void RunHistograms::summarise() {
 
     // live time
     hlivetime->Fill(runstr.c_str(), nlb*TIME_PER_LS*fills_->getLiveFractionFromRun(*itr));
+    hhltrate->Fill(runstr.c_str(), nEvts_.at(run)/( nlb*TIME_PER_LS*fills_->getLiveFractionFromRun(*itr)));
+    hhltrate_2->Fill(atoi(runstr.c_str()), nEvts_.at(run)/( nlb*TIME_PER_LS*fills_->getLiveFractionFromRun(*itr)));
     
   }
 
@@ -162,6 +166,8 @@ void RunHistograms::summarise() {
   hnhlt->Write("",TObject::kOverwrite);
   hlivetime->Write("",TObject::kOverwrite);
   hnlb->Write("",TObject::kOverwrite);
+  hhltrate->Write("",TObject::kOverwrite);
+  hhltrate_2->Write("",TObject::kOverwrite);
 
 }
 
